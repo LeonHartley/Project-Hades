@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.Data", "Hades.Data\Ha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.API", "Hades.API\Hades.API.csproj", "{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.Items", "Hades.Items\Hades.Items.csproj", "{4FE05665-0343-454B-80E5-02AC8DBBCAE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
