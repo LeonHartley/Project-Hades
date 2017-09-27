@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.Data", "Hades.Data\Hades.Data.csproj", "{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.API", "Hades.API\Hades.API.csproj", "{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01DD5039-8620-41BB-B7CA-875E5FBF65ED}
+	EndGlobalSection
+EndGlobal
