@@ -6,5 +6,6 @@ namespace Hades.API.Players.Settings
 {
     public interface IPlayerSettings
     {
+
     }
 }
