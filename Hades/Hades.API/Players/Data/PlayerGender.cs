@@ -6,6 +6,7 @@ namespace Hades.API.Players.Data
 {
     public enum PlayerGender
     {
-        Male, Female
+        Male = 0,
+        Female = 1
     }
 }

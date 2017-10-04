@@ -1,8 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
+<<<<<<< HEAD
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.Data", "Hades.Data\Hades.Data.csproj", "{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.API", "Hades.API\Hades.API.csproj", "{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}"
@@ -10,6 +11,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.Items", "Hades.Items\Hades.Items.csproj", "{4FE05665-0343-454B-80E5-02AC8DBBCAE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades-WebService", "Hades-WebService\Hades-WebService.csproj", "{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}"
+=======
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.API", "Hades.API\Hades.API.csproj", "{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.Items", "Hades.Items\Hades.Items.csproj", "{4FE05665-0343-454B-80E5-02AC8DBBCAE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.Data", "Hades.Data\Hades.Data.csproj", "{94E7FE84-DCA9-4ED7-9DA2-01B49C1EA81B}"
+>>>>>>> 09d3c4b587b536b446fe76a6ad9f928456f255d0
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,10 +33,17 @@ Global
 		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+		{94E7FE84-DCA9-4ED7-9DA2-01B49C1EA81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94E7FE84-DCA9-4ED7-9DA2-01B49C1EA81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94E7FE84-DCA9-4ED7-9DA2-01B49C1EA81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94E7FE84-DCA9-4ED7-9DA2-01B49C1EA81B}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> 09d3c4b587b536b446fe76a6ad9f928456f255d0
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
