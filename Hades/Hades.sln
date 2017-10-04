@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.Data", "Hades.Data\Hades.Data.csproj", "{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.Data", "Hades.Data\Hades.Data.csproj", "{8EDD81B5-3BF0-4E96-A0D9-F24376B6A555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.API", "Hades.API\Hades.API.csproj", "{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.API", "Hades.API\Hades.API.csproj", "{C3BEB6D1-4FEA-4AE2-8256-7905828432A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades.Items", "Hades.Items\Hades.Items.csproj", "{4FE05665-0343-454B-80E5-02AC8DBBCAE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hades.Items", "Hades.Items\Hades.Items.csproj", "{4FE05665-0343-454B-80E5-02AC8DBBCAE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hades-WebService", "Hades-WebService\Hades-WebService.csproj", "{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FE05665-0343-454B-80E5-02AC8DBBCAE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0B3E92E-C8ED-4665-A644-4FEC2FB87283}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
