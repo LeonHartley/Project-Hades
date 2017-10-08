@@ -41,7 +41,10 @@ namespace Hades.Data.Client.Players
         {
             _baseClient.Endpoint = "/data/players/authenticate";
             _baseClient.Method = HttpMethod.Post;
-            _baseClient.Payload = ssoToken;
+            _baseClient.Payload = JsonConvert.SerializeObject(new
+            {
+                SsoToken = ssoToken
+            });
 
             return await _baseClient.Get<Player>();
         }

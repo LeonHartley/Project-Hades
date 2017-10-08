@@ -6,7 +6,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Networking\Channels\Handlers\HadesChannelHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StructureMap" Version="4.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Hades.Data.Client\Hades.Data.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Coerce.Commons">
+      <HintPath>..\..\..\Coerce.NET\Coerce.Networking.TestServer\bin\Debug\netcoreapp1.1\Coerce.Commons.dll</HintPath>
+    </Reference>
+    <Reference Include="Coerce.Networking.Api">
+      <HintPath>..\..\..\Coerce.NET\Coerce.Networking.TestServer\bin\Debug\netcoreapp1.1\Coerce.Networking.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Coerce.Networking.Core">
+      <HintPath>..\..\..\Coerce.NET\Coerce.Networking.TestServer\bin\Debug\netcoreapp1.1\Coerce.Networking.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

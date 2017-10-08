@@ -48,10 +48,10 @@ namespace Hades.Data.Controllers.Players
             return Ok(player);
         }
 
-        [HttpPost("auth/")]
-        public async Task<IActionResult> Authenticate([FromBody] string ssoToken)
+        [HttpPost("authenticate/")]
+        public async Task<IActionResult> Authenticate([FromBody] dynamic request)
         {
-            var player = await _playerRepository.GetByAuthenticationToken(ssoToken);
+            var player = await _playerRepository.Authenticate((string) request.SsoToken);
 
             if (player == null)
             {

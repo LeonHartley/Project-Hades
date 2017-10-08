@@ -13,7 +13,7 @@ namespace Hades.Data.Repositories
     {
         Task<Player> Get(int id);
 
-        Task<Player> GetByAuthenticationToken(string token);
+        Task<Player> Authenticate(string token);
 
         Task<Player> Create(Player player);
 
@@ -36,7 +36,7 @@ namespace Hades.Data.Repositories
             return await Load(player);
         }
 
-        public async Task<Player> GetByAuthenticationToken(string token)
+        public async Task<Player> Authenticate(string token)
         {
             var player = _playerContext.PlayerData.Where(p => p.AuthenticationToken == token);
 
