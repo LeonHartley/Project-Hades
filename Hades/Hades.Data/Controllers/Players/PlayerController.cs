@@ -29,8 +29,8 @@ namespace Hades.Data.Controllers.Players
             // Grab status object from redis cache
             return new
             {
-                Online = 1,
-                Total = 10
+                Online = 0,
+                Total = 1
             };
         }
 

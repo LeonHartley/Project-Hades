@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hades.Items
+namespace Hades.Common
 {
     public class Class1
     {
