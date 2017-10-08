@@ -13,5 +13,7 @@ namespace Hades.API.Rooms.Tiles
         List<IRoomItem> Items { get; }
 
         List<IRoomActor> Actors { get; }
+
+        void Reload();
     }
 }
