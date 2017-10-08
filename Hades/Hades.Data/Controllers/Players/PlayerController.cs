@@ -1,14 +1,27 @@
-﻿using Hades.API.Data;
+﻿using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Hades.API.Players;
 using Hades.API.Players.Data;
-using Hades.Data.Data.Models;
+using Hades.Data.Context;
+using Hades.Data.Models.Players;
+using Hades.Data.Models;
+using Hades.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hades.Data.Controllers.Players
 {
     [Route("data/players")]
     public class PlayerController : Controller
     {
+        private readonly IPlayerRepository _playerRepository;
+
+        public PlayerController(IPlayerRepository playerRepository)
+        {
+            _playerRepository = playerRepository;
+        }
+
         // GET data/players
         [HttpGet]
         public dynamic Get()
@@ -23,21 +36,57 @@ namespace Hades.Data.Controllers.Players
 
         // GET data/players/{id}
         [HttpGet("{id}")]
-        public IPlayerData Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            // If there's an object in the redis cache, return it rather than fetching it from the database
+            var player = await _playerRepository.Get(id);
 
+            if (player == null)
+            {
+                return NotFound();
+            }
 
-            // Grab the player object from the chosen data store
-            return new PlayerData(id, "Leon", "figure", "motto", PlayerGender.Male);
+            return Ok(player);
         }
-        
+
+        [HttpPost("auth/")]
+        public async Task<IActionResult> Authenticate([FromBody] string ssoToken)
+        {
+            var player = await _playerRepository.GetByAuthenticationToken(ssoToken);
+
+            if (player == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(player);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Player player)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(player);
+            }
+
+            var created = await _playerRepository.Create(player);
+
+            return Ok(created);
+        }
+
         // PUT data/players/{id}
         [HttpPut("{id}")]
-        public string Save([FromBody] PlayerData player)
+        public async Task<IActionResult> Save([FromBody] Player player)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _playerRepository.Update(player);
+
             // Save the player object into the chosen data store
-            return "OK";
+            return Ok();
         }
     }
 }

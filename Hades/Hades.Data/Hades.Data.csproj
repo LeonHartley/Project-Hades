@@ -5,13 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.9-dmr" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hades.API\Hades.API.csproj" />
+    <ProjectReference Include="..\Hades.Data.Models\Hades.Data.Models.csproj" />
   </ItemGroup>
 
 </Project>

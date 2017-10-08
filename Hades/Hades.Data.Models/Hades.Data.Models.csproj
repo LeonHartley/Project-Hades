@@ -9,4 +9,8 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hades.API\Hades.API.csproj" />
+  </ItemGroup>
+
 </Project>
