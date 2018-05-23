@@ -1,4 +1,4 @@
-#include "test.h"
+#include "common/test.h"
 
 namespace hades {
 	std::string test() {
