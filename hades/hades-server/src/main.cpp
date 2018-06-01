@@ -9,16 +9,24 @@
 
 INITIALIZE_EASYLOGGINGPP
 
+using namespace active911;
 using namespace hades;
 
-int main(int argc, char *argv[]) {
+void initialise_storage() {
+    // Create a pool of 5 MySQL connections
+    std::shared_ptr<MySQLConnectionFactory> mysql_connection_factory(
+            new MySQLConnectionFactory("localhost", "root", ""));
+
+    std::shared_ptr<ConnectionPool<MySQLConnection>> mysql_pool(
+            new ConnectionPool<MySQLConnection>(5, mysql_connection_factory));
+
+    auto storageCtx = std::make_shared<StorageCtx>(mysql_pool);
+    StorageCtx::setCtx(storageCtx);
+}
+
+void initialise_net() {
     uv_loop_t netLoop;
     uv_loop_init(&netLoop);
-
-    LOG(INFO) << "test test test";
-    LOG(INFO) << "yoo";
-
-    StorageCtx::initialise();
 
     std::unique_ptr<GameServer> gameServer = ServerBuilder::newBuilder()
             ->host("0.0.0.0")
@@ -28,4 +36,9 @@ int main(int argc, char *argv[]) {
             ->create();
 
     gameServer->start();
+}
+
+int main(int argc, char *argv[]) {
+    initialise_storage();
+    initialise_net();
 }
