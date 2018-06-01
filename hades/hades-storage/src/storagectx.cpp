@@ -5,7 +5,6 @@
 #include <storage/storagectx.h>
 #include <common/log/log.h>
 
-#include <boost/shared_ptr.hpp>
 #include "MySQLConnection.h"
 
 using namespace active911;
@@ -21,5 +20,4 @@ void hades::StorageCtx::test() {
     auto connection = mysql_pool->borrow();
 
     connection->sql_connection->setSchema("cometsrv");
-
 }
