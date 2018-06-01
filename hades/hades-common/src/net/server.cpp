@@ -2,7 +2,8 @@
 
 using namespace hades;
 void GameServer::createStream(uv_stream_t *serverStream) {
-
+    // when we've created the stream, we pass it to
+    //this->streamHandler_->onConnectionOpen(stream);
 }
 
 void GameServer::start() {

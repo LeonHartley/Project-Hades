@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     LOG(INFO) << "test test test";
     LOG(INFO) << "yoo";
 
-    StorageCtx::test();
+    StorageCtx::initialise();
 
     std::unique_ptr<GameServer> gameServer = ServerBuilder::newBuilder()
             ->host("0.0.0.0")

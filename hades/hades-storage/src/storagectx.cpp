@@ -4,6 +4,7 @@
 
 #include <storage/storagectx.h>
 #include <common/log/log.h>
+#include <storage/mysql/mysqlplayers.h>
 
 #include "MySQLConnection.h"
 
@@ -12,8 +13,7 @@ using namespace hades;
 
 const auto log = LoggerProvider::get("StorageCtx");
 
-void StorageCtx::test() {
-    // register storage logger
+void StorageCtx::initialise() {
     // Create a pool of 5 MySQL connections
     std::shared_ptr<MySQLConnectionFactory> mysql_connection_factory(
             new MySQLConnectionFactory("localhost", "root", ""));
@@ -24,5 +24,9 @@ void StorageCtx::test() {
     auto connection = mysql_pool->borrow();
 
     connection->sql_connection->setSchema("cometsrv");
-    log->info("yoo");
+
+    MySQLPlayerRepository playerRepository;
+    auto player = playerRepository.getDataById(1);
+
+    log->info("player %v", player->getUsername());
 }
