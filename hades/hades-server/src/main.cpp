@@ -38,7 +38,7 @@ namespace hades {
 
         std::unique_ptr<GameServer> gameServer = ServerBuilder::newBuilder()
                 ->host("0.0.0.0")
-                ->port(1234)
+                ->port(30000)
                 ->sessionFactory(SessionFactory())
                 ->streamHandler(StreamHandler())
                 ->uvLoop(&netLoop)

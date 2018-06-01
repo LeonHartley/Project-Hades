@@ -25,6 +25,18 @@ namespace hades {
             free(buffer_);
         }
 
+        bool hasData() {
+            return this->readerIndex_ < this->size_;
+        }
+
+        int readerIndex() {
+            return this->readerIndex_;
+        }
+
+        int bytesRemaining() {
+            return static_cast<int>(this->size_ - this->readerIndex_);
+        }
+
         template<typename R>
         R read();
 
