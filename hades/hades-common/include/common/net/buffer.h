@@ -14,7 +14,7 @@ namespace hades {
             writerIndex_ = 0;
         }
 
-        Buffer(size_t size, char *buffer) {
+        Buffer(size_t size, char *buffer) : size_(size), buffer_(buffer) {
             size_ = size;
             expandable_ = false;
             readerIndex_ = 0;

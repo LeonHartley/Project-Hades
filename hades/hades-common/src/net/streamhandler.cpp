@@ -1,16 +1,18 @@
+#include <iostream>
 #include "common/net/streamhandler.h"
 
 using namespace hades;
 
-void StreamHandler::onConnectionOpen(uv_stream_t *stream) {
-    Session *session = sessionFactory_.createSession(stream);
-
-    stream->data = static_cast<void *>(session);
+void StreamHandler::onConnectionOpen(Session *session) {
+//    Session *session = sessionFactory_.createSession(stream);
+//
+//    stream->data = static_cast<void *>(session);
 }
 
-void StreamHandler::onConnectionClosed(uv_stream_t *stream) {
-    auto session = static_cast<Session *>(stream->data);
+void StreamHandler::onConnectionClosed(Session *session) {
+    //
+}
 
-    sessionFactory_.disposeSession(session);
-    stream->data = nullptr;
+void StreamHandler::onReceiveData(Session *session, std::unique_ptr<Buffer> buffer) {
+    std::cout << "yoyo " << session << " " << buffer.get() << "\n";
 }

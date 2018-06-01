@@ -11,7 +11,11 @@ namespace hades {
         }
 
         void write(Message &message) {
-            
+
+        }
+
+        static Session *fromStream(uv_stream_t *stream) {
+            return reinterpret_cast<Session *>(stream->data);
         }
 
     private:

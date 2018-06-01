@@ -7,6 +7,8 @@
 namespace hades {
     class SessionFactory {
     public:
+        SessionFactory() = default;
+
         virtual Session *createSession(uv_stream_t *client) {
             return new Session(client);
         }

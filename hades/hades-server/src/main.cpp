@@ -11,42 +11,44 @@
 INITIALIZE_EASYLOGGINGPP
 
 using namespace active911;
-using namespace hades;
 
-void initialise_storage() {
-    // Create a pool of 5 MySQL connections
-    std::shared_ptr<MySQLConnectionFactory> mysql_connection_factory(
-            new MySQLConnectionFactory("localhost", "root", ""));
+namespace hades {
+    void initialiseStorage() {
+        // Create a pool of 5 MySQL connections
+        std::shared_ptr<MySQLConnectionFactory> mysql_connection_factory(
+                new MySQLConnectionFactory("localhost", "root", ""));
 
-    std::shared_ptr<ConnectionPool<MySQLConnection>> mysql_pool(
-            new ConnectionPool<MySQLConnection>(5, mysql_connection_factory));
+        std::shared_ptr<ConnectionPool<MySQLConnection>> mysql_pool(
+                new ConnectionPool<MySQLConnection>(5, mysql_connection_factory));
 
-    auto storageCtx = std::make_shared<StorageCtx>(mysql_pool);
-    StorageCtx::ctx(storageCtx);
+        auto storageCtx = std::make_shared<StorageCtx>(mysql_pool);
+        StorageCtx::ctx(storageCtx);
 
-    // Setup repositories
-    StorageCtx::players(std::make_shared<MySQLPlayerRepository>(storageCtx));
+        // Setup repositories
+        StorageCtx::players(std::make_shared<MySQLPlayerRepository>(storageCtx));
 
-    auto player = StorageCtx::players()->getDataById(1);
+        auto player = StorageCtx::players()->getDataById(1);
 
-    LoggerProvider::get("main")->info("Player %v", player->getUsername());
-}
+        LoggerProvider::get("main")->info("Player %v", player->getUsername());
+    }
 
-void initialise_net() {
-    uv_loop_t netLoop;
-    uv_loop_init(&netLoop);
+    void initialiseNet() {
+        uv_loop_t netLoop;
+        uv_loop_init(&netLoop);
 
-    std::unique_ptr<GameServer> gameServer = ServerBuilder::newBuilder()
-            ->host("0.0.0.0")
-            ->port(1234)
-            ->streamHandler(StreamHandler())
-            ->uvLoop(&netLoop)
-            ->create();
+        std::unique_ptr<GameServer> gameServer = ServerBuilder::newBuilder()
+                ->host("0.0.0.0")
+                ->port(1234)
+                ->sessionFactory(SessionFactory())
+                ->streamHandler(StreamHandler())
+                ->uvLoop(&netLoop)
+                ->create();
 
-    gameServer->start();
+        gameServer->start();
+    }
 }
 
 int main(int argc, char *argv[]) {
-    initialise_storage();
-    initialise_net();
+    hades::initialiseStorage();
+    hades::initialiseNet();
 }

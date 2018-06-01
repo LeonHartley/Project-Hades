@@ -6,9 +6,6 @@
 #include <common/log/log.h>
 #include <storage/mysql/mysqlplayers.h>
 
-#include "MySQLConnection.h"
-
-using namespace active911;
 using namespace hades;
 
 const auto log = LoggerProvider::get("StorageCtx");

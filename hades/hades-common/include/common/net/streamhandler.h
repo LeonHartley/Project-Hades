@@ -6,12 +6,11 @@
 namespace hades {
     class StreamHandler {
     public:
-        void onConnectionOpen(uv_stream_t *stream);
+        void onConnectionOpen(Session *session);
 
-        void onConnectionClosed(uv_stream_t *stream);
+        void onConnectionClosed(Session *session);
 
-    protected:
-        SessionFactory sessionFactory_;
+        void onReceiveData(Session *session, std::unique_ptr<Buffer> buffer);
     };
 
 }

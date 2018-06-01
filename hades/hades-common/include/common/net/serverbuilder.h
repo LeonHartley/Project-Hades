@@ -13,8 +13,12 @@ namespace hades {
         }
 
         ServerBuilder *streamHandler(StreamHandler clientHandler) {
-            clientHandler_ = std::make_unique<StreamHandler>(clientHandler);
+            streamHandler_ = clientHandler;
+            return this;
+        }
 
+        ServerBuilder *sessionFactory(SessionFactory sessionFactory) {
+            sessionFactory_ = sessionFactory;
             return this;
         }
 
@@ -34,7 +38,9 @@ namespace hades {
         }
 
         std::unique_ptr<GameServer> create() {
-            return std::make_unique<GameServer>(host_, port_, std::move(clientHandler_), loop_);
+            return std::make_unique<GameServer>(host_, port_, std::make_unique<SessionFactory>(sessionFactory_),
+                                                std::make_unique<StreamHandler>(streamHandler_),
+                                                loop_);
         }
 
     private:
@@ -42,6 +48,8 @@ namespace hades {
         short port_ = 30000;
 
         uv_loop_t *loop_;
-        std::unique_ptr<StreamHandler> clientHandler_;
+
+        StreamHandler streamHandler_;
+        SessionFactory sessionFactory_;
     };
 }
