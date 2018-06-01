@@ -21,8 +21,11 @@ void initialise_storage() {
     std::shared_ptr<ConnectionPool<MySQLConnection>> mysql_pool(
             new ConnectionPool<MySQLConnection>(5, mysql_connection_factory));
 
-    auto storageCtx = std::make_shared<StorageCtx>(mysql_pool, std::make_shared<MySQLPlayerRepository>());
+    auto storageCtx = std::make_shared<StorageCtx>(mysql_pool);
     StorageCtx::ctx(storageCtx);
+
+    // Setup repositories
+    StorageCtx::players(std::make_shared<MySQLPlayerRepository>(storageCtx));
 
     auto player = StorageCtx::players()->getDataById(1);
 
