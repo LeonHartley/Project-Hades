@@ -8,8 +8,12 @@
 #include "MySQLConnection.h"
 
 using namespace active911;
+using namespace hades;
 
-void hades::StorageCtx::test() {
+const auto log = LoggerProvider::get("StorageCtx");
+
+void StorageCtx::test() {
+    // register storage logger
     // Create a pool of 5 MySQL connections
     std::shared_ptr<MySQLConnectionFactory> mysql_connection_factory(
             new MySQLConnectionFactory("localhost", "root", ""));
@@ -20,4 +24,5 @@ void hades::StorageCtx::test() {
     auto connection = mysql_pool->borrow();
 
     connection->sql_connection->setSchema("cometsrv");
+    log->info("yoo");
 }
