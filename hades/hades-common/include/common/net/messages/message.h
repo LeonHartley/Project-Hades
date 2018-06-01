@@ -5,12 +5,10 @@
 namespace hades {
     class Message {
     public:
-        Message() {
+        Message() = default;
 
-        }
+        virtual short getId() const = 0;
 
-        virtual void compose(Buffer &buffer) {
-
-        }
+        virtual void compose(Buffer &buffer) = 0;
     };
 }

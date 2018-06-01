@@ -10,7 +10,7 @@ namespace hades {
 
         }
 
-        void write(Message &message) {
+        void send(const Message &message) {
 
         }
 

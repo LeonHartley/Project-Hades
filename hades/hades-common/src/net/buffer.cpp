@@ -10,8 +10,8 @@ int hades::Buffer::read() {
            (0xff & this->buffer_[this->readerIndex_++]);
 }
 
-template<typename W>
-void hades::Buffer::write(W data) {
+template<>
+void hades::Buffer::write(std::string data) {
 
 }
 
