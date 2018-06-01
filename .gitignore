@@ -44,3 +44,6 @@ bin/
 *.app
 
 .vs
+
+cmake-build-debug/
+.idea/
