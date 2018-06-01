@@ -15,17 +15,17 @@ using namespace active911;
 namespace hades {
     void initialiseStorage() {
         // Create a pool of 5 MySQL connections
-        std::shared_ptr<MySQLConnectionFactory> mysql_connection_factory(
+        std::shared_ptr<MySQLConnectionFactory> mysqlConnectionFactory(
                 new MySQLConnectionFactory("localhost", "root", ""));
 
-        std::shared_ptr<ConnectionPool<MySQLConnection>> mysql_pool(
-                new ConnectionPool<MySQLConnection>(5, mysql_connection_factory));
+        std::shared_ptr<ConnectionPool<MySQLConnection>> mysqlPool(
+                new ConnectionPool<MySQLConnection>(5, mysqlConnectionFactory));
 
-        auto storageCtx = std::make_shared<StorageCtx>(mysql_pool);
-        StorageCtx::ctx(storageCtx);
+        auto storageCtx = std::make_shared<StorageCtx>(mysqlPool);
+        StorageCtx::ctx(std::move(storageCtx));
 
         // Setup repositories
-        StorageCtx::players(std::make_shared<MySQLPlayerRepository>(storageCtx));
+        StorageCtx::players(std::make_shared<MySQLPlayerRepository>(StorageCtx::ctx()));
 
         auto player = StorageCtx::players()->getDataById(1);
 
