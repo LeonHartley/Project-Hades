@@ -3,8 +3,9 @@
 
 #include <common/net/buffer.h>
 #include <common/net/serverbuilder.h>
-#include <vector>
 #include <common/log/log.h>
+
+#include <storage/storagectx.h>
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -15,6 +16,9 @@ int main(int argc, char *argv[]) {
     uv_loop_init(&netLoop);
 
     LOG(INFO) << "test test test";
+    LOG(INFO) << "yoo";
+
+    StorageCtx::test();
 
     std::unique_ptr<GameServer> gameServer = ServerBuilder::newBuilder()
             ->host("0.0.0.0")

@@ -1,6 +1,5 @@
 
 include_directories(include/)
-add_library(hades-common STATIC
-        include/game/net/server.h
-        include/game/net/serverbuilder.h
-        src/test.cpp)
+add_library(hades-storage STATIC
+        src/storagectx.cpp include/storage/storagectx.h)
+target_link_libraries(hades-storage hades-common)

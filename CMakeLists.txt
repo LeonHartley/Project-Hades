@@ -8,6 +8,7 @@ set(VENDOR_INCLUDES
         )
 set(HADES_INCLUDES
         hades/hades-common/include
+        hades/hades-storage/include
         hades/hades-server/include)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin)
@@ -18,6 +19,8 @@ find_package (Libuv)
 
 add_subdirectory(hades/hades-server)
 add_subdirectory(hades/hades-common)
+add_subdirectory(hades/hades-storage)
 
 target_include_directories(hades-common PUBLIC ${VENDOR_INCLUDES})
 target_include_directories(hades-server PUBLIC ${HADES_INCLUDES} ${VENDOR_INCLUDES})
+target_include_directories(hades-storage PUBLIC ${HADES_INCLUDES} ${VENDOR_INCLUDES})
