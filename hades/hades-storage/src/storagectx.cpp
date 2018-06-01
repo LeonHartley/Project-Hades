@@ -12,3 +12,13 @@ using namespace active911;
 using namespace hades;
 
 const auto log = LoggerProvider::get("StorageCtx");
+
+static std::shared_ptr<StorageCtx> currentCtx;
+
+void StorageCtx::ctx(std::shared_ptr<StorageCtx> ctx) {
+    currentCtx = ctx;
+}
+
+std::shared_ptr<StorageCtx> StorageCtx::ctx() {
+    return currentCtx;
+}
