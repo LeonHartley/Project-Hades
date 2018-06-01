@@ -10,18 +10,22 @@ namespace hades {
     class GameServer {
 
     public:
-        GameServer(std::string host, short port, std::unique_ptr<StreamHandler> streamHandler) : host_(std::move(host)),
-                                                   port_(port), streamHandler_(streamHandler) {
+        GameServer(std::string &host, short port, std::unique_ptr<StreamHandler> streamHandler, uv_loop_t *loop) : host_(host),
+                                                   port_(port), streamHandler_(streamHandler), loop_(loop) {
         }
 
-        void start() {
-            /* start the server */
-
+        ~GameServer() {
+            free(loop_);
         }
 
+        void start();
     private:
+        void createStream(uv_stream_t *server);
+
         const std::string host_;
         const short port_;
+
+        uv_loop_t *loop_;
         const std::unique_ptr<StreamHandler> &streamHandler_;
     };
 }

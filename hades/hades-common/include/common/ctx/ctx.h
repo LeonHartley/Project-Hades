@@ -2,4 +2,8 @@
 
 namespace hades {
 
+    class Context {
+
+    };
+
 }

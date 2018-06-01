@@ -18,6 +18,11 @@ namespace hades {
             return this;
         }
 
+        ServerBuilder *uvLoop(uv_loop_t *loop) {
+            loop_ = loop;
+            return this;
+        }
+
         ServerBuilder *host(std::string host) {
             host_ = std::move(host);
             return this;
@@ -29,12 +34,14 @@ namespace hades {
         }
 
         std::unique_ptr<GameServer> create() {
-            return std::make_unique<GameServer>(host_, port_, std::move(clientHandler_));
+            return std::make_unique<GameServer>(host_, port_, std::move(clientHandler_), loop_);
         }
 
     private:
-        std::string host_;
-        short port_{};
+        std::string host_ = "0.0.0.0";
+        short port_ = 30000;
+
+        uv_loop_t *loop_;
         std::unique_ptr<StreamHandler> clientHandler_;
     };
 }

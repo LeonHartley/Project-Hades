@@ -3,6 +3,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake" CAC
 
 project(hades)
 
+set(VENDOR_INCLUDES
+
+        )
 set(HADES_INCLUDES
         hades/hades-common/include
         hades/hades-server/include)
@@ -16,4 +19,5 @@ find_package (Libuv)
 add_subdirectory(hades/hades-server)
 add_subdirectory(hades/hades-common)
 
-target_include_directories(hades-server PUBLIC ${HADES_INCLUDES})
+target_include_directories(hades-common PUBLIC ${VENDOR_INCLUDES})
+target_include_directories(hades-server PUBLIC ${HADES_INCLUDES} ${VENDOR_INCLUDES})
