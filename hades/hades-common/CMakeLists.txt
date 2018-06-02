@@ -17,4 +17,4 @@ add_library(hades-common STATIC
         include/common/ctx/ctx.h
         include/common/net/messages/message.h
         include/common/log/log.h
-        src/log/log.cpp)
+        src/log/log.cpp src/pool.cpp include/common/pool.h)

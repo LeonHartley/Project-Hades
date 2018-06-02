@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <common/net/session/session.h>
 #include <common/net/buffer.h>
 

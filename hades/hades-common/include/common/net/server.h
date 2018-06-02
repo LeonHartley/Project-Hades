@@ -4,7 +4,8 @@
 #include <utility>
 #include <iostream>
 
-#include "streamhandler.h"
+#include <common/net/session/sessionfactory.h>
+#include <common/net/streamhandler.h>
 
 namespace hades {
     class GameServer {

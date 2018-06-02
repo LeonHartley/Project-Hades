@@ -2,29 +2,24 @@
 #include <memory>
 
 #include <common/net/buffer.h>
+#include <common/net/session/sessionfactory.h>
 #include <common/net/serverbuilder.h>
-#include <common/log/log.h>
 
+#include <common/log/log.h>
 #include <storage/storagectx.h>
 #include <storage/mysql/mysqlplayers.h>
+#include <common/pool.h>
+#include <storage/mysql/connectionpool.h>
 
 INITIALIZE_EASYLOGGINGPP
 
-using namespace active911;
-
 namespace hades {
+
     void initialiseStorage() {
-        // Create a pool of 5 MySQL connections
-        std::shared_ptr<MySQLConnectionFactory> mysqlConnectionFactory(
-                new MySQLConnectionFactory("localhost", "root", ""));
+        std::shared_ptr<ConnectionPool> pool =
+                std::make_shared<ConnectionPool>(5, ConnectionFactory("localhost", "root", "", "cometsrv"));
 
-        std::shared_ptr<ConnectionPool<MySQLConnection>> mysqlPool(
-                new ConnectionPool<MySQLConnection>(5, mysqlConnectionFactory));
-
-        auto storageCtx = std::make_shared<StorageCtx>(mysqlPool);
-        StorageCtx::ctx(std::move(storageCtx));
-
-        // Setup repositories
+        StorageCtx::ctx(std::make_shared<StorageCtx>(std::move(pool)));
         StorageCtx::players(std::make_shared<MySQLPlayerRepository>(StorageCtx::ctx()));
 
         auto player = StorageCtx::players()->getDataById(1);

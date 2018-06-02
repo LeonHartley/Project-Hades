@@ -1,12 +1,10 @@
 #pragma once
 
-#include <MySQLConnection.h>
 #include <storage/repositories/players.h>
+#include <storage/mysql/connectionpool.h>
 
 namespace hades {
     class StorageCtx {
-        using ConnectionPool = active911::ConnectionPool<active911::MySQLConnection>;
-
     public:
         StorageCtx(std::shared_ptr<ConnectionPool> pool) : pool_(pool) {
         }
