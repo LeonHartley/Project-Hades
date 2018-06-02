@@ -1,5 +1,5 @@
 
-include_directories(include/ ${VENDOR_INCLUDES})
+include_directories(include/ ${HADES_INCLUDES} ${VENDOR_INCLUDES})
 
 add_library(hades-common STATIC
         include/common/net/server.h
@@ -16,5 +16,5 @@ add_library(hades-common STATIC
         src/net/server.cpp
         include/common/ctx/ctx.h
         include/common/net/messages/message.h
-
-        include/common/log/log.h src/log/log.cpp ../hades-protocol/include/protocol/MotdNotificationComposer.h)
+        include/common/log/log.h
+        src/log/log.cpp)

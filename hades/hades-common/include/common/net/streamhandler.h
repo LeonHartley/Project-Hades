@@ -1,7 +1,7 @@
 #pragma once
 
-#include <uv.h>
-#include <common/net/session/sessionfactory.h>
+#include <common/net/session/session.h>
+#include <common/net/buffer.h>
 
 namespace hades {
     class StreamHandler {
