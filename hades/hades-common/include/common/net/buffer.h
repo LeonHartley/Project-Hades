@@ -8,23 +8,23 @@ namespace hades {
 
     public:
         Buffer(size_t size, bool expandable, bool freeOnDelete = true) {
+            printf("CREATING BUFFER\n");
             size_ = size;
             expandable_ = expandable;
             buffer_ = (char *) malloc(size);
-            readerIndex_ = 0;
-            writerIndex_ = 0;
+            freeOnDelete_ = freeOnDelete;
         }
 
         Buffer(size_t size, char *buffer, bool freeOnDelete = true) : size_(size), buffer_(buffer),
                                                                       freeOnDelete_(freeOnDelete) {
-            size_ = size;
+            printf("CREATING BUFFER\n");
             expandable_ = false;
-            readerIndex_ = 0;
-            readerIndex_ = 0;
         }
 
         ~Buffer() {
-            free(buffer_);
+            if(freeOnDelete_) {
+                free(buffer_);
+            }
         }
 
         bool hasData() {
@@ -43,13 +43,20 @@ namespace hades {
             return static_cast<int>(this->size_ - this->readerIndex_);
         }
 
-        char *prepare();
+        void prepare(char *out);
 
         template<typename R>
         R read();
 
         template<typename W>
         void write(W data);
+
+        template<typename W>
+        void writeAt(W data, int index);
+
+        char *base() {
+            return this->buffer_;
+        }
 
     private:
         char *buffer_;
@@ -58,7 +65,7 @@ namespace hades {
         bool freeOnDelete_;
 
         int readerIndex_ = 0;
-        int writerIndex_ = 0;
+        int writerIndex_ = 4;
     };
 
 }

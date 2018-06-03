@@ -9,6 +9,6 @@ namespace hades {
 
         virtual short getId() const = 0;
 
-        virtual void compose(Buffer &buffer) const {};
+        virtual void compose(Buffer *buffer) const {};
     };
 }

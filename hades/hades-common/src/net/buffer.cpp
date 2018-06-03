@@ -21,7 +21,11 @@ short Buffer::read() {
 template<>
 std::string Buffer::read() {
     short len = this->read<short>();
-    auto str = std::string(this->buffer_ + this->readerIndex_, static_cast<unsigned long>(this->readerIndex_ + (len)));
+    std::string str;
+
+    for(int i = 0; i < len; i++) {
+        str.append(1, this->buffer_[this->readerIndex_++]);
+    }
 
     this->readerIndex_ += len;
 
@@ -61,15 +65,26 @@ void Buffer::write(std::string data) {
     }
 }
 
-char *Buffer::prepare() {
-    size_t length = static_cast<size_t>(this->writerIndex_);
-    char *buf = static_cast<char *>(malloc(length));
+template<>
+void Buffer::writeAt(int data, int index) {
+    this->buffer_[index++] = ((data >> 24) & 0xff);
+    this->buffer_[index++] = ((data >> 16) & 0xff);
+    this->buffer_[index++] = ((data >> 8) & 0xff);
+    this->buffer_[index] = (data & 0xff);
+}
 
-    this->writerIndex_ = 0;
-    this->write<int>(static_cast<int>(length));
+void Buffer::prepare(char *out) {
+    this->writeAt<int>(this->writerIndex_ - 4, 0);
 
-    memcpy(buf, this->buffer_, length);
+    memcpy(out, this->base(), static_cast<size_t>(this->writerIndex_ + 4));
+}
 
-    this->writerIndex_ = (int) length;
-    return buf;
+template<typename W>
+void Buffer::write(W data) {
+
+}
+
+template<typename W>
+void Buffer::writeAt(W data, int index) {
+
 }

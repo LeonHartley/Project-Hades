@@ -13,18 +13,7 @@ namespace hades {
 
     class MessageDispatch {
     public:
-        void dispatch(Session *session, std::unique_ptr<Buffer> buffer) {
-            if (handlers_.size() == 0) {
-                handlers_[4000] = HandshakeHandler::readRelease;
-            }
-
-            const short header = buffer->read<short>();
-            const MessageHandler handler = handlers_[header];
-
-            if (handler != nullptr) {
-                handlers_[header](session, std::move(buffer));
-            }
-        }
+        void dispatch(Session *session, std::unique_ptr<Buffer> buffer);
 
     private:
         std::map<short, MessageHandler> handlers_;

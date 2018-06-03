@@ -14,9 +14,9 @@ namespace hades {
             return 408;
         }
 
-        virtual void compose(Buffer &buffer) const {
-            buffer.write<int>(1);
-            buffer.write<std::string>(this->message_);
+        void compose(Buffer *buffer) const override {
+            buffer->write<int>(1);
+            buffer->write<std::string>(this->message_);
         }
 
     private:

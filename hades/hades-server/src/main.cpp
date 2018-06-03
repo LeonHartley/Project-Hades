@@ -15,6 +15,18 @@ INITIALIZE_EASYLOGGINGPP
 
 namespace hades {
 
+    void testBuffer() {
+//        Buffer buf(512, true, false);
+//
+//        buf.write<short>(412);
+//        buf.write<int>(1);
+//        buf.write<std::string>("Leon");
+
+//        Buffer reader(static_cast<size_t>(buf.writerIndex()), buf.prepare(), false);
+//
+//        std::cout << reader.read<int>() << " " << reader.read<short>() << " " << reader.read<int>() << " " << reader.read<std::string>() << "\n";
+    }
+
     void initialiseStorage() {
         std::shared_ptr<ConnectionPool> pool =
                 std::make_shared<ConnectionPool>(5, ConnectionFactory("localhost", "root", "", "cometsrv"));
@@ -44,6 +56,7 @@ namespace hades {
 }
 
 int main(int argc, char *argv[]) {
+    hades::testBuffer();
     hades::initialiseStorage();
     hades::initialiseNet();
 }

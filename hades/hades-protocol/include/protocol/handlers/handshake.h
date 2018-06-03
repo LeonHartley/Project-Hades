@@ -8,5 +8,8 @@ namespace hades {
 
     public:
         static void readRelease(Session *session, std::unique_ptr<Buffer> buffer);
+
+        static void authentication(Session *session, std::unique_ptr<Buffer> buffer);
+
     };
 }
