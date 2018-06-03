@@ -9,7 +9,7 @@ namespace hades {
     class StreamHandler {
     public:
         StreamHandler() : messageDispatch_(MessageDispatch()) {
-            
+
         }
 
     public:
@@ -17,7 +17,7 @@ namespace hades {
 
         void onConnectionClosed(Session *session);
 
-        void onReceiveData(Session *session, std::shared_ptr<Buffer> buffer);
+        void onReceiveData(Session *session, std::unique_ptr<Buffer> buffer);
 
     private:
         MessageDispatch messageDispatch_;

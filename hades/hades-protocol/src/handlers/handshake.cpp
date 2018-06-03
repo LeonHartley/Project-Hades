@@ -5,8 +5,8 @@ using namespace hades;
 
 const auto log = LoggerProvider::get("HandshakeHandler");
 
-void HandshakeHandler::readRelease(Session *session, std::shared_ptr<Buffer> buffer)  {
-    const std::string version = buffer->read<std::string>();
+void HandshakeHandler::readRelease(Session *session, std::unique_ptr<Buffer> buffer)  {
+    const auto version = buffer->read<std::string>();
 
     log->info("Client with version %v", version);
 }

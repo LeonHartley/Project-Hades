@@ -21,8 +21,11 @@ short Buffer::read() {
 template<>
 std::string Buffer::read() {
     short len = this->read<short>();
+    auto str = std::string(this->buffer_ + this->readerIndex_, static_cast<unsigned long>(this->readerIndex_ + (len)));
 
-    return std::string(this->buffer_ + this->readerIndex_, static_cast<unsigned long>(this->readerIndex_ += len));
+    this->readerIndex_ += len;
+
+    return std::move(str);
 }
 
 template<>
@@ -53,7 +56,7 @@ template<>
 void Buffer::write(std::string data) {
     this->write<short>(static_cast<short>(data.length()));
 
-    for(char &character : data) {
+    for (char &character : data) {
         this->write<char>(character);
     }
 }

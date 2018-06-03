@@ -7,6 +7,6 @@ namespace hades {
     class HandshakeHandler {
 
     public:
-        static void readRelease(Session *session, std::shared_ptr<Buffer> buffer);
+        static void readRelease(Session *session, std::unique_ptr<Buffer> buffer);
     };
 }
