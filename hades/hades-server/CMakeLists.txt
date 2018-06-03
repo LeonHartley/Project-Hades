@@ -6,4 +6,5 @@ add_executable(hades-server
 target_link_libraries(hades-server
         hades-common
         hades-storage
+        hades-protocol
         uv)

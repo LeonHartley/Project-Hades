@@ -33,7 +33,7 @@ void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buff
             uv_close(reinterpret_cast<uv_handle_t *>(req->handle), &GameServer::onStreamClosed);
         });
     } else {
-        server->streamHandler_->onReceiveData(session, std::make_unique<Buffer>(buffer->len, buffer->base));
+        server->streamHandler_->onReceiveData(session, std::make_shared<Buffer>(buffer->len, buffer->base));
     }
 }
 

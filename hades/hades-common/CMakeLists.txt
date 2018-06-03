@@ -17,4 +17,6 @@ add_library(hades-common STATIC
         include/common/ctx/ctx.h
         include/common/net/messages/message.h
         include/common/log/log.h
-        src/log/log.cpp src/pool.cpp include/common/pool.h)
+        src/log/log.cpp src/pool.cpp include/common/pool.h include/common/net/messages/messagehandler.h)
+
+target_link_libraries(hades-common hades-protocol)
