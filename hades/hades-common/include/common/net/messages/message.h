@@ -17,7 +17,7 @@ namespace hades {
         virtual short getId() const { return -1; };
 
         virtual void compose(Buffer *buffer) const {
-
+            std::cout << "Hey\n";
         };
     };
 }

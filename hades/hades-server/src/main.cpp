@@ -14,6 +14,28 @@
 INITIALIZE_EASYLOGGINGPP
 
 namespace hades {
+    class Test {
+
+    public:
+        virtual int count() const {
+            return 9001;
+        }
+    };
+
+    class TestOne : public Test {
+        int count() const override {
+            return 1000;
+        }
+    };
+
+    void testSomething() {
+        TestOne test;
+
+        std::unique_ptr<Test> ptr = std::make_unique<Test>(test);
+
+        std::cout << ptr->count() << "\n";
+    }
+
     void initialiseStorage() {
         std::shared_ptr<ConnectionPool> pool =
                 std::make_shared<ConnectionPool>(5, ConnectionFactory("localhost", "root", "", "cometsrv"));
@@ -43,6 +65,7 @@ namespace hades {
 }
 
 int main(int argc, char *argv[]) {
+    hades::testSomething();
     hades::initialiseStorage();
     hades::initialiseNet();
 }

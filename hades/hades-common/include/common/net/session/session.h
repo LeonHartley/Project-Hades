@@ -28,10 +28,10 @@ namespace hades {
 
         void flush();
     private:
-        void flushBuffer(Buffer buffer);
+        void flushBuffer(std::unique_ptr<Buffer> buffer);
 
         std::mutex msgQueueLock_;
-        std::vector<std::unique_ptr<Message>> msgQueue_{};
+        std::unique_ptr<Buffer> buffer_;
         uv_stream_t *handle_;
     };
 }

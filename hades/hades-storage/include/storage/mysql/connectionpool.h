@@ -76,8 +76,6 @@ namespace hades {
 
         ~ConnectionGuard() {
             pool_->push(std::move(this->obj_));
-
-            std::cout << "returnin obj to pool\n";
         }
 
 //        Connection &connection() {

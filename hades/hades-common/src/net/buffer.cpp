@@ -80,8 +80,8 @@ void Buffer::write(bool data) {
 }
 
 void Buffer::prepare(char *out) {
-    this->writeAt<int>(((int) this->writerIndex_ - 4), 0);
-    memcpy(out, this->base(), static_cast<size_t>(this->writerIndex_));
+//    this->writeAt<int>(((int) this->writerIndex_ - 4), 0);
+
 }
 
 template<typename W>

@@ -63,7 +63,7 @@ namespace hades {
         bool freeOnDelete_;
 
         int readerIndex_ = 0;
-        int writerIndex_ = 4;
+        int writerIndex_ = 0;
     };
 
 }
