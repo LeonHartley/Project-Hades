@@ -24,7 +24,7 @@ std::string Buffer::read() {
     short len = this->read<short>();
     std::string str;
 
-    for(int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
         str.append(1, this->buffer_[this->readerIndex_++]);
     }
 
@@ -74,21 +74,18 @@ void Buffer::writeAt(int data, int index) {
     this->buffer_[index] = (data & 0xff);
 }
 
+template<>
+void Buffer::write(bool data) {
+    this->write<char>(data ? (char) 1 : (char) 0);
+}
+
 void Buffer::prepare(char *out) {
     this->writeAt<int>(((int) this->writerIndex_ - 4), 0);
-
-    for(int i = 0; i < this->writerIndex_; i++) {
-        std::cout << (int) this->buffer_[i];
-    }
-
-    std::cout << "\n";
-
     memcpy(out, this->base(), static_cast<size_t>(this->writerIndex_));
 }
 
 template<typename W>
 void Buffer::write(W data) {
-
 }
 
 template<typename W>

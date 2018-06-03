@@ -1,6 +1,7 @@
 #include <common/net/session/session.h>
 #include <iostream>
 #include <common/log/log.h>
+#include <common/net/server.h>
 
 using namespace hades;
 
@@ -13,23 +14,44 @@ void writeComplete(uv_write_t *writer, int status) {
     free(writer);
 }
 
-void Session::send(const Message &message) {
+void Session::flushBuffer(Buffer buffer) {
     // Create an expandable buffer that doesn't free the inner buffer
     uv_write_t *writer = static_cast<uv_write_t *>(malloc(sizeof(uv_write_t)));
+    const uv_buf_t buf = uv_buf_init(static_cast<char *>(malloc(static_cast<size_t>(buffer.writerIndex()))),
+                                     static_cast<unsigned int>(buffer.writerIndex()));
+
+    buffer.prepare(buf.base);
+
+    writer->handle = this->handle_;
+    writer->data = buf.base;
+
+    log->debug("Writing data to client with length %v", buf.len, buf.base);
+
+    uv_write(writer, this->handle_, &buf, 1, &writeComplete);
+}
+
+void Session::send(const Message &message) {
     Buffer buf(256, true, false);
 
     buf.write<short>(message.getId());
     message.compose(&buf);
 
-    const uv_buf_t buffer = uv_buf_init(static_cast<char *>(malloc(static_cast<size_t>(buf.writerIndex()))),
-                                        static_cast<unsigned int>(buf.writerIndex()));
+    this->flushBuffer(std::move(buf));
+}
 
-    buf.prepare(buffer.base);
+void Session::send(std::vector<Message *> messages) {
+    Buffer buf(256, true, false);
 
-    writer->handle = this->handle_;
-    writer->data = buffer.base;
+    std::for_each(messages.begin(), messages.end(), [&](Message *msg) {
+        buf.write<short>(msg->getId());
+        msg->compose(&buf);
 
-    log->debug("Writing data to client with length %v, data %v", buffer.len, buffer.base);
+        delete msg;
+    });
 
-    uv_write(writer, this->handle_, &buffer, 1, &writeComplete);
+    this->flushBuffer(std::move(buf));
+}
+
+void Session::close() {
+    uv_close(reinterpret_cast<uv_handle_t *>(this->handle_), &GameServer::onStreamClosed);
 }

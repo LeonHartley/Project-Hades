@@ -6,7 +6,7 @@
 namespace hades {
     class MotdNotificationMessageComposer : public Message {
     public:
-        explicit MotdNotificationMessageComposer(std::string message) : message_(message) {
+        explicit MotdNotificationMessageComposer(std::string message) : Message(), message_(message) {
 
         }
 
@@ -24,8 +24,17 @@ namespace hades {
     };
 
     class AuthenticationOKMessageComposer : public Message {
+    public:
+        AuthenticationOKMessageComposer() : Message() {
+
+        }
+
         short getId() const override {
             return 3054;
+        }
+
+        void compose(Buffer *buffer) const override {
+
         }
     };
 }

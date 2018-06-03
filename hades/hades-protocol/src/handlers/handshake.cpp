@@ -18,13 +18,10 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
 
     auto player = StorageCtx::players()->getDataByTicket(sso);
 
-    if(player != nullptr) {
-        session->send(AuthenticationOKMessageComposer());
-
-        std::string msg = "Hi ";
-
-        session->send(MotdNotificationMessageComposer(msg.append(player->getUsername())));
+    if (player == nullptr) {
+        session->close();
+        return;
     }
 
-    log->info("User with SSO %v", sso);
+    session->send(AuthenticationOKMessageComposer());
 }
