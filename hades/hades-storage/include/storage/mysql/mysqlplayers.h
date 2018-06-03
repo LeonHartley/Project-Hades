@@ -12,6 +12,7 @@ namespace hades {
         virtual std::unique_ptr<PlayerData> getDataById(int id);
 
     private:
+        PlayerDataFactory playerDataFactory_;
         std::shared_ptr<StorageCtx> ctx_;
     };
 

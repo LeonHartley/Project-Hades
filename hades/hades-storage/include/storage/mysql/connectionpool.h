@@ -2,6 +2,8 @@
 
 #include <common/pool.h>
 #include <cppconn/connection.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
 #include <cppconn/driver.h>
 
 namespace hades {
@@ -9,6 +11,14 @@ namespace hades {
 
     public:
         Connection(std::shared_ptr<sql::Connection> connection) : connection_(connection) {}
+
+        std::unique_ptr<sql::PreparedStatement> prepare(std::string query) {
+            return std::unique_ptr<sql::PreparedStatement>(this->connection_->prepareStatement(query));
+        }
+
+        std::shared_ptr<sql::ResultSet> executeQuery(std::unique_ptr<sql::PreparedStatement> statement) {
+            return std::shared_ptr<sql::ResultSet>(statement->executeQuery());
+        }
 
         std::shared_ptr<sql::Connection> &get() {
             return connection_;
@@ -70,8 +80,12 @@ namespace hades {
             std::cout << "returnin obj to pool\n";
         }
 
-        sql::Connection *operator->() const {
-            return obj_->get().get();
+//        Connection &connection() {
+//            return obj_->get();
+//        }
+
+        Connection *operator->() const {
+            return obj_.get();
         }
 
     private:

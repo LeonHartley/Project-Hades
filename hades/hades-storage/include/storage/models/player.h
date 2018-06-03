@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 namespace hades {
@@ -13,14 +14,14 @@ namespace hades {
                    const std::string &figure, PlayerGender gender, bool vip, int credits, int vipPoints,
                    int activityPoints, int seasonalPoints, int createdTimestamp, int lastVisitTimestamp,
                    int favouriteGroup, int currentQuest) : id_(id), rank_(rank), username_(username),
-                                                             motto_(motto), figure_(figure), gender_(gender),
-                                                             vip_(vip), credits_(credits), vipPoints_(vipPoints),
-                                                             activityPoints_(activityPoints),
-                                                             seasonalPoints_(seasonalPoints),
-                                                             createdTimestamp_(createdTimestamp),
-                                                             lastVisitTimestamp_(lastVisitTimestamp),
-                                                             favouriteGroup_(favouriteGroup),
-                                                             currentQuest_(currentQuest) {}
+                                                           motto_(motto), figure_(figure), gender_(gender),
+                                                           vip_(vip), credits_(credits), vipPoints_(vipPoints),
+                                                           activityPoints_(activityPoints),
+                                                           seasonalPoints_(seasonalPoints),
+                                                           createdTimestamp_(createdTimestamp),
+                                                           lastVisitTimestamp_(lastVisitTimestamp),
+                                                           favouriteGroup_(favouriteGroup),
+                                                           currentQuest_(currentQuest) {}
 
         int getId() const {
             return id_;
@@ -164,5 +165,19 @@ namespace hades {
 
         int favouriteGroup_;
         int currentQuest_;
+    };
+
+    class PlayerDataFactory {
+    public:
+        std::unique_ptr<PlayerData> create(int id, int rank, const std::string &username, const std::string &motto,
+                                           const std::string &figure, PlayerGender gender, bool vip, int credits,
+                                           int vipPoints,
+                                           int activityPoints, int seasonalPoints, int createdTimestamp,
+                                           int lastVisitTimestamp,
+                                           int favouriteGroup, int currentQuest) {
+            return std::make_unique<PlayerData>(id, rank, username, motto, figure, gender, vip, credits, vipPoints,
+                                                activityPoints, seasonalPoints, createdTimestamp, lastVisitTimestamp,
+                                                favouriteGroup, currentQuest);
+        }
     };
 }
