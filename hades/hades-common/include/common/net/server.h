@@ -23,7 +23,6 @@ namespace hades {
 
         void start();
 
-
         static void onStreamClosed(uv_handle_t *stream);
     private:
         void createStream(uv_stream_t *server);

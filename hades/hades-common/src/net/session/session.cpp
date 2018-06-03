@@ -39,17 +39,27 @@ void Session::send(const Message &message) {
     this->flushBuffer(std::move(buf));
 }
 
-void Session::send(std::vector<Message *> messages) {
+void Session::sendQueued(const Message &message) {
+    std::lock_guard<std::mutex> guard(this->msgQueueLock_);
+    this->msgQueue_.push_back(std::make_unique<Message>(std::move(message)));
+}
+
+void Session::flush() {
+    std::lock_guard<std::mutex> guard(this->msgQueueLock_);
+
     Buffer buf(256, true, false);
 
-    std::for_each(messages.begin(), messages.end(), [&](Message *msg) {
+    std::for_each(this->msgQueue_.begin(), this->msgQueue_.end(), [&](std::unique_ptr<Message> &msg) {
         buf.write<short>(msg->getId());
         msg->compose(&buf);
-
-        delete msg;
     });
 
+    this->msgQueue_.clear();
     this->flushBuffer(std::move(buf));
+}
+
+void Session::send(std::vector<Message *> messages) {
+
 }
 
 void Session::close() {

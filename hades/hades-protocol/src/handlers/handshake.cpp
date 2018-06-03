@@ -24,4 +24,5 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
     }
 
     session->send(AuthenticationOKMessageComposer());
+    session->send(MotdNotificationMessageComposer("hiii"));
 }
