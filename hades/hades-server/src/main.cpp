@@ -16,15 +16,21 @@ INITIALIZE_EASYLOGGINGPP
 namespace hades {
 
     void testBuffer() {
-//        Buffer buf(512, true, false);
-//
-//        buf.write<short>(412);
-//        buf.write<int>(1);
-//        buf.write<std::string>("Leon");
+        Buffer buf(512, true, false);
 
-//        Buffer reader(static_cast<size_t>(buf.writerIndex()), buf.prepare(), false);
-//
-//        std::cout << reader.read<int>() << " " << reader.read<short>() << " " << reader.read<int>() << " " << reader.read<std::string>() << "\n";
+        buf.write<short>(412);
+        buf.write<int>(1);
+        buf.write<std::string>("Leon");
+
+        char *a = static_cast<char *>(malloc(256));
+
+        buf.prepare(a);
+
+        free(buf.base());
+
+        Buffer reader(static_cast<size_t>(buf.writerIndex()), a, false);
+
+        std::cout << reader.read<int>() << " " << reader.read<short>() << " " << reader.read<int>() << " " << reader.read<std::string>() << "\n";
     }
 
     void initialiseStorage() {

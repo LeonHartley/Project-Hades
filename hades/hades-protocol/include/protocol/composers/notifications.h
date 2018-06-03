@@ -22,4 +22,10 @@ namespace hades {
     private:
         std::string message_;
     };
+
+    class AuthenticationOKMessageComposer : public Message {
+        short getId() const override {
+            return 3054;
+        }
+    };
 }

@@ -1,6 +1,7 @@
 #include "common/net/buffer.h"
 
 #include <string>
+#include <iostream>
 
 using namespace hades;
 
@@ -74,9 +75,15 @@ void Buffer::writeAt(int data, int index) {
 }
 
 void Buffer::prepare(char *out) {
-    this->writeAt<int>(this->writerIndex_ - 4, 0);
+    this->writeAt<int>(((int) this->writerIndex_ - 4), 0);
 
-    memcpy(out, this->base(), static_cast<size_t>(this->writerIndex_ + 4));
+    for(int i = 0; i < this->writerIndex_; i++) {
+        std::cout << (int) this->buffer_[i];
+    }
+
+    std::cout << "\n";
+
+    memcpy(out, this->base(), static_cast<size_t>(this->writerIndex_));
 }
 
 template<typename W>

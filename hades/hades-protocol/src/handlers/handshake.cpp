@@ -17,5 +17,6 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
 
     log->info("User with SSO %v", sso);
 
-    session->send(MotdNotificationMessageComposer("heya ;D"));
+    session->send(AuthenticationOKMessageComposer());
+    session->send(MotdNotificationMessageComposer("hi"));
 }

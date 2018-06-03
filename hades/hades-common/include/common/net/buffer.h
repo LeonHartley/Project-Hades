@@ -8,7 +8,6 @@ namespace hades {
 
     public:
         Buffer(size_t size, bool expandable, bool freeOnDelete = true) {
-            printf("CREATING BUFFER\n");
             size_ = size;
             expandable_ = expandable;
             buffer_ = (char *) malloc(size);
@@ -17,12 +16,11 @@ namespace hades {
 
         Buffer(size_t size, char *buffer, bool freeOnDelete = true) : size_(size), buffer_(buffer),
                                                                       freeOnDelete_(freeOnDelete) {
-            printf("CREATING BUFFER\n");
             expandable_ = false;
         }
 
         ~Buffer() {
-            if(freeOnDelete_) {
+            if (freeOnDelete_) {
                 free(buffer_);
             }
         }
