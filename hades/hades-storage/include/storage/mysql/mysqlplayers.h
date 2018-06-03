@@ -9,8 +9,9 @@ namespace hades {
         MySQLPlayerRepository(std::shared_ptr<StorageCtx> ctx) : ctx_(ctx) {
         }
 
-        virtual std::unique_ptr<PlayerData> getDataById(int id);
+        virtual std::unique_ptr<PlayerData> getDataByTicket(std::string sso);
 
+        virtual std::unique_ptr<PlayerData> getDataById(int id);
     private:
         PlayerDataFactory playerDataFactory_;
         std::shared_ptr<StorageCtx> ctx_;

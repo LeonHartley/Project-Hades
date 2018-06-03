@@ -1,6 +1,7 @@
 #include <protocol/handlers/handshake.h>
 #include <common/log/log.h>
 #include <protocol/composers/notifications.h>
+#include <storage/storagectx.h>
 
 using namespace hades;
 
@@ -15,8 +16,15 @@ void HandshakeHandler::readRelease(Session *session, std::unique_ptr<Buffer> buf
 void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> buffer) {
     const auto sso = buffer->read<std::string>();
 
-    log->info("User with SSO %v", sso);
+    auto player = StorageCtx::players()->getDataByTicket(sso);
 
-    session->send(AuthenticationOKMessageComposer());
-    session->send(MotdNotificationMessageComposer("hi"));
+    if(player != nullptr) {
+        session->send(AuthenticationOKMessageComposer());
+
+        std::string msg = "Hi ";
+
+        session->send(MotdNotificationMessageComposer(msg.append(player->getUsername())));
+    }
+
+    log->info("User with SSO %v", sso);
 }
