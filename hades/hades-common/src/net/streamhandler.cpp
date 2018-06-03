@@ -1,6 +1,6 @@
 #include <iostream>
 #include <common/log/log.h>
-#include <protocol/composers/MotdNotificationComposer.h>
+#include <protocol/composers/notifications.h>
 #include "common/net/streamhandler.h"
 
 using namespace hades;

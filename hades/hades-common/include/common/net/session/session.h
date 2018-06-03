@@ -10,15 +10,13 @@ namespace hades {
 
         }
 
-        void send(const Message &message) {
-
-        }
+        void send(const Message &message);
 
         static Session *fromStream(uv_stream_t *stream) {
             return reinterpret_cast<Session *>(stream->data);
         }
 
     private:
-        const uv_stream_t *handle_;
+        uv_stream_t *handle_;
     };
 }

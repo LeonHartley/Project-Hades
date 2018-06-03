@@ -60,3 +60,16 @@ void Buffer::write(std::string data) {
         this->write<char>(character);
     }
 }
+
+char *Buffer::prepare() {
+    size_t length = static_cast<size_t>(this->writerIndex_);
+    char *buf = static_cast<char *>(malloc(length));
+
+    this->writerIndex_ = 0;
+    this->write<int>(static_cast<int>(length));
+
+    memcpy(buf, this->buffer_, length);
+
+    this->writerIndex_ = (int) length;
+    return buf;
+}

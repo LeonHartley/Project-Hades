@@ -1,12 +1,13 @@
 #pragma once
 
 #include <malloc.h>
+#include <cstring>
 
 namespace hades {
-    struct Buffer {
+    class Buffer {
 
     public:
-        Buffer(size_t size, bool expandable) {
+        Buffer(size_t size, bool expandable, bool freeOnDelete = true) {
             size_ = size;
             expandable_ = expandable;
             buffer_ = (char *) malloc(size);
@@ -14,7 +15,8 @@ namespace hades {
             writerIndex_ = 0;
         }
 
-        Buffer(size_t size, char *buffer) : size_(size), buffer_(buffer) {
+        Buffer(size_t size, char *buffer, bool freeOnDelete = true) : size_(size), buffer_(buffer),
+                                                                      freeOnDelete_(freeOnDelete) {
             size_ = size;
             expandable_ = false;
             readerIndex_ = 0;
@@ -29,6 +31,10 @@ namespace hades {
             return this->readerIndex_ < this->size_;
         }
 
+        int writerIndex() {
+            return this->writerIndex_;
+        }
+
         int readerIndex() {
             return this->readerIndex_;
         }
@@ -36,6 +42,8 @@ namespace hades {
         int bytesRemaining() {
             return static_cast<int>(this->size_ - this->readerIndex_);
         }
+
+        char *prepare();
 
         template<typename R>
         R read();
@@ -47,6 +55,7 @@ namespace hades {
         char *buffer_;
         size_t size_;
         bool expandable_;
+        bool freeOnDelete_;
 
         int readerIndex_ = 0;
         int writerIndex_ = 0;
