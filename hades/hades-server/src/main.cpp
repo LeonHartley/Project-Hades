@@ -57,7 +57,7 @@ namespace hades {
 }
 
 int main(int argc, char *argv[]) {
-    hades::Communication::start("service", hades::RedisConfig{
+    hades::Communication::start("peer-1", hades::RedisConfig{
             .host = "localhost",
             .port = 6379
     }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));

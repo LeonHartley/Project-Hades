@@ -32,14 +32,15 @@ namespace hades {
     public:
         Communication(std::string serviceName, RedisConfig redisConfig,
                       std::unique_ptr<CommunicationSubscriber> subscriber)
-                : serviceName_(serviceName),
+                : serviceName_(std::move(serviceName)),
                   subscriber_(std::move(subscriber)),
                   thread_(static_cast<uv_thread_t *>(
                                   malloc(sizeof(uv_thread_t)))),
 
                   loop_(static_cast<uv_loop_t *>(malloc(
                           sizeof(uv_loop_t)))),
-                  ctx_(redisAsyncConnect(redisConfig.host.c_str(), redisConfig.port)) {}
+                  ctx_(redisAsyncConnect(redisConfig.host.c_str(), redisConfig.port)),
+                  client_(redisAsyncConnect(redisConfig.host.c_str(), redisConfig.port)) {}
 
         ~Communication() {
             uv_thread_join(this->thread_);
@@ -50,20 +51,30 @@ namespace hades {
 
         static void dispose();
 
-        static void start(std::string serviceName, RedisConfig redisConfig, std::unique_ptr<CommunicationSubscriber> subscriber);
+        static void
+        start(std::string serviceName, RedisConfig redisConfig, std::unique_ptr<CommunicationSubscriber> subscriber);
 
         uv_loop_t *loop() {
             return loop_;
         }
 
-        redisAsyncContext *redis() {
+        redisAsyncContext *listenClient() {
             return ctx_;
         }
 
+        redisAsyncContext *client() {
+            return client_;
+        }
+
+        std::string serviceName() {
+            return serviceName_;
+        }
+
     private:
-        std::string &serviceName_;
+        std::string serviceName_;
         std::unique_ptr<CommunicationSubscriber> subscriber_;
 
+        redisAsyncContext *client_;
         redisAsyncContext *ctx_;
         uv_loop_t *loop_;
         uv_thread_t *thread_;
