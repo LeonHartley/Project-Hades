@@ -28,8 +28,6 @@ std::string Buffer::read() {
         str.append(1, this->buffer_[this->readerIndex_++]);
     }
 
-    this->readerIndex_ += len;
-
     return std::move(str);
 }
 
@@ -59,9 +57,11 @@ void Buffer::write(int data) {
 
 template<>
 void Buffer::write(std::string data) {
-    this->write<short>(static_cast<short>(data.length()));
+    short length = static_cast<short>(data.length());
 
-    for (char &character : data) {
+    this->write<short>(length);
+
+    for (char character : data) {
         this->write<char>(character);
     }
 }

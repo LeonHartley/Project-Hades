@@ -23,8 +23,13 @@ auto const log = hades::LoggerProvider::get("Boot");
 
 namespace hades {
     class TestSubscriber : public CommunicationSubscriber {
-        void onMessage(Communication *ctx, int type, std::string id, std::unique_ptr<Buffer> msg) override {
-            log->info("Received subscribed msg with data %v, %v", type, id);
+        void onMessage(Communication *ctx, short type, std::string id, std::unique_ptr<Buffer> msg) override {
+            if(type == 1337) {
+                std::string payload = msg->read<std::string>();
+
+                log->info("Received subscribed msg [%v] with data %v from %v", type, payload, id);
+            }
+//            log->info("Received subscribed msg with data %v, %v", type, id);
 
             free(msg->base());
         }
@@ -63,14 +68,6 @@ int main(int argc, char *argv[]) {
             .host = "localhost",
             .port = 6379
     }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
-
-    std::unique_ptr<hades::Buffer> buf = std::make_unique<hades::Buffer>(256, false);
-
-    buf->write<int>(1337);
-    buf->write<std::string>("Leon's msg");
-    buf->write<std::string>("herro");
-
-    hades::Communication::send("peer-1", std::move(buf));
 
     hades::initialiseStorage();
     hades::initialiseNet();

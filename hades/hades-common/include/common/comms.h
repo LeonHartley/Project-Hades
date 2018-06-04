@@ -16,7 +16,7 @@ namespace hades {
 
     class CommunicationSubscriber {
     public:
-        virtual void onMessage(Communication *ctx, int type, std::string id, std::unique_ptr<Buffer> msg) {
+        virtual void onMessage(Communication *ctx, short type, std::string id, std::unique_ptr<Buffer> msg) {
             std::cout << "Hmmm" << std::endl;
         };
     };
@@ -54,7 +54,7 @@ namespace hades {
         static void
         start(std::string serviceName, RedisConfig redisConfig, std::unique_ptr<CommunicationSubscriber> subscriber);
 
-        static void send(std::string serviceName, std::unique_ptr<Buffer> payload);
+        static void send(std::string serviceName, short type, std::string id, void (*writer)(Buffer *buf));
 
         uv_loop_t *loop() {
             return loop_;

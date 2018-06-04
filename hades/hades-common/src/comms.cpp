@@ -26,6 +26,10 @@ void sendAvailability(uv_timer_t *data) {
     auto comms = static_cast<Communication *>(data->data);
     redisAsyncCommand(comms->client(), nullptr, nullptr, "PUBLISH %s %s", availableServicesTopic.c_str(),
                       comms->serviceName().c_str());
+
+    hades::Communication::send("peer-1", 1337, "Leon", [](hades::Buffer *buffer) {
+        buffer->write<std::string>("Leon's msg");
+    });
 }
 
 void Communication::threadCtx(void *ctx) {
@@ -67,7 +71,7 @@ void Communication::threadCtx(void *ctx) {
                     const char *out = reinterpret_cast<const char *>(b64_decode_ex(payload->str, payload->len, &size));
                     Buffer buffer(size, out, false);
 
-                    int msgType = buffer.read<int>();
+                    short msgType = buffer.read<short>();
                     std::string id = buffer.read<std::string>();
 
                     ctx->subscriber_->onMessage(ctx, msgType, std::move(id),
@@ -93,7 +97,14 @@ void Communication::start(std::string serviceName, RedisConfig redisConfig,
                      static_cast<void *>(communicationCtx));
 }
 
-void Communication::send(std::string serviceName, std::unique_ptr<Buffer> payload) {
+void Communication::send(std::string serviceName, short type, std::string id, void (*writer)(Buffer *buf)) {
+    std::unique_ptr<Buffer> payload = std::make_unique<Buffer>(256, false);
+
+    payload->write<short>(type);
+    payload->write<std::string>(id);
+
+    writer(payload.get());
+
     char *data = b64_encode(reinterpret_cast<const unsigned char *>(payload->base()),
                             static_cast<size_t>(payload->writerIndex()));
 
