@@ -2,6 +2,7 @@
 #include <common/log/log.h>
 #include <zconf.h>
 #include <hiredis/adapters/libuv.h>
+#include <common/util/base64.h>
 
 using namespace hades;
 
@@ -54,15 +55,25 @@ void Communication::threadCtx(void *ctx) {
         if (reply->type == REDIS_REPLY_ARRAY) {
             if (reply->element[2]->str != NULL) {
                 std::string topic(reply->element[1]->str);
-                std::string data(reply->element[2]->str);
+                redisReply *payload = reply->element[2];
 
                 if (topic == availableServicesTopic) {
+                    std::string data(payload->str);
+
                     log->info("service available: %v", data);
                 } else {
                     auto ctx = static_cast<Communication *>(redis->data);
-                    ctx->subscriber_->onMessage(ctx, 0, std::move(data), nullptr);
+                    size_t size = 0;
+                    const char *out = reinterpret_cast<const char *>(b64_decode_ex(payload->str, payload->len, &size));
+                    Buffer buffer(size, out, false);
+
+                    int msgType = buffer.read<int>();
+                    std::string id = buffer.read<std::string>();
+
+                    ctx->subscriber_->onMessage(ctx, msgType, std::move(id),
+                                                std::make_unique<Buffer>(std::move(buffer)));
                 }
-             }
+            }
         }
     }, nullptr, "SUBSCRIBE available-services service:%s", comms->serviceName().c_str());
 
@@ -80,4 +91,11 @@ void Communication::start(std::string serviceName, RedisConfig redisConfig,
     communicationCtx = new Communication(serviceName, std::move(redisConfig), std::move(subscriber));
     uv_thread_create(communicationCtx->thread_, &Communication::threadCtx,
                      static_cast<void *>(communicationCtx));
+}
+
+void Communication::send(std::string serviceName, std::unique_ptr<Buffer> payload) {
+    char *data = b64_encode(reinterpret_cast<const unsigned char *>(payload->base()),
+                            static_cast<size_t>(payload->writerIndex()));
+
+    redisAsyncCommand(communicationCtx->client(), nullptr, nullptr, "PUBLISH service:%s %s", serviceName.c_str(), data);
 }

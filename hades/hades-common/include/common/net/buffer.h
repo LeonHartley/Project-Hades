@@ -14,8 +14,9 @@ namespace hades {
             freeOnDelete_ = freeOnDelete;
         }
 
-        Buffer(size_t size, char *buffer, bool freeOnDelete = true) : size_(size), buffer_(buffer),
-                                                                      freeOnDelete_(freeOnDelete) {
+        Buffer(size_t size, const char *buffer, bool freeOnDelete = true) : size_(size), buffer_(
+                const_cast<char *>(buffer)),
+                                                                            freeOnDelete_(freeOnDelete) {
             expandable_ = false;
         }
 
@@ -39,6 +40,14 @@ namespace hades {
 
         int bytesRemaining() {
             return static_cast<int>(this->size_ - this->readerIndex_);
+        }
+
+        void copyFrom(size_t length, char *src) {
+            memcpy(this->buffer_, src, length);
+        }
+
+        void copyTo(char *destination) {
+            memcpy(destination, this->base(), static_cast<size_t>(this->writerIndex()));
         }
 
         void prepare(char *out);

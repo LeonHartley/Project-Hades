@@ -54,6 +54,8 @@ namespace hades {
         static void
         start(std::string serviceName, RedisConfig redisConfig, std::unique_ptr<CommunicationSubscriber> subscriber);
 
+        static void send(std::string serviceName, std::unique_ptr<Buffer> payload);
+
         uv_loop_t *loop() {
             return loop_;
         }
