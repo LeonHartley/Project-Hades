@@ -11,30 +11,22 @@
 #include <storage/mysql/mysqlplayers.h>
 #include <storage/mysql/connectionpool.h>
 
+#include <hiredis/hiredis.h>
+#include <hiredis/adapters/libuv.h>
+
+#include <common/comms.h>
+
 INITIALIZE_EASYLOGGINGPP
 
+
+auto const log = hades::LoggerProvider::get("Boot");
+
 namespace hades {
-    class Test {
-
-    public:
-        virtual int count() const {
-            return 9001;
+    class TestSubscriber : public CommunicationSubscriber {
+        void onMessage(Communication *ctx, int type, std::string id, std::unique_ptr<Buffer> msg) override {
+            log->info("Received subscribed msg with type %v", type);
         }
     };
-
-    class TestOne : public Test {
-        int count() const override {
-            return 1000;
-        }
-    };
-
-    void testSomething() {
-        TestOne test;
-
-        std::unique_ptr<Test> ptr = std::make_unique<Test>(test);
-
-        std::cout << ptr->count() << "\n";
-    }
 
     void initialiseStorage() {
         std::shared_ptr<ConnectionPool> pool =
@@ -65,7 +57,13 @@ namespace hades {
 }
 
 int main(int argc, char *argv[]) {
-    hades::testSomething();
+    hades::Communication::start("service", hades::RedisConfig{
+            .host = "localhost",
+            .port = 6379
+    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
+
     hades::initialiseStorage();
     hades::initialiseNet();
+
+    hades::Communication::dispose();
 }

@@ -1,4 +1,4 @@
-include_directories(include/)
+include_directories(include/  ${HADES_INCLUDES} ${VENDOR_INCLUDES})
 
 add_executable(hades-server
     src/main.cpp)

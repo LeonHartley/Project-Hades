@@ -58,7 +58,7 @@ namespace hades {
         std::string schema_;
     };
 
-    typedef class ConnectionGuard;
+    class ConnectionGuard;
 
     class ConnectionPool : public ObjectPool<Connection, ConnectionFactory> {
     public:

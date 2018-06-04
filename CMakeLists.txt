@@ -4,7 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake" CAC
 project(hades)
 
 set(VENDOR_INCLUDES
-        vendor/connection-pool
+        vendor/
         )
 
 set(HADES_INCLUDES
@@ -19,6 +19,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin)
 
 find_package (Libuv)
 find_package (MySQLClient)
+
+file(GLOB hiredis vendor/hiredis/*.c)
 
 add_subdirectory(hades/hades-server)
 add_subdirectory(hades/hades-common)
