@@ -16,11 +16,11 @@ namespace hades {
     class SessionContext {
     public:
         SessionContext() {
-            std::cout << "creating #" << ++counter << std::endl;
+
         }
 
         ~SessionContext() {
-            std::cout << "disposing #" << counter << std::endl;
+
         }
 
         virtual void handleMessage(Session *session, std::unique_ptr<Buffer> buffer);

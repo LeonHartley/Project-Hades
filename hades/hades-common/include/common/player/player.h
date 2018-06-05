@@ -19,6 +19,9 @@ namespace hades {
             session_->send(std::move(message));
         }
 
+        PlayerData *data() {
+            return this->playerData_.get();
+        }
     private:
         Session *session_;
         std::unique_ptr<PlayerData> playerData_;
@@ -31,7 +34,7 @@ namespace hades {
 
         }
 
-        virtual void handleMessage(std::unique_ptr<Buffer> buffer);
+        void handleMessage(Session *session, std::unique_ptr<Buffer> buffer) override;
 
     private:
         std::unique_ptr<Player> player_;

@@ -25,8 +25,6 @@ void Session::flushBuffer(std::unique_ptr<Buffer> buffer) {
     writer->handle = this->handle_;
     writer->data = buf.base;
 
-    log->debug("Writing data to client with length %v", buf.len, buf.base);
-
     uv_write(writer, this->handle_, &buf, 1, &writeComplete);
 //    this->buffer_ = nullptr;
 }

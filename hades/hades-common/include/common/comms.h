@@ -17,7 +17,7 @@ namespace hades {
     class CommunicationSubscriber {
     public:
         virtual void onMessage(Communication *ctx, short type, std::string id, std::unique_ptr<Buffer> msg) {
-            std::cout << "Hmmm" << std::endl;
+
         };
     };
 

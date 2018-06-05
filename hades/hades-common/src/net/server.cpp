@@ -34,6 +34,13 @@ void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buff
             uv_close(reinterpret_cast<uv_handle_t *>(req->handle), &GameServer::onStreamClosed);
         });
     } else {
+        if (stream->data == nullptr) {
+            Session *session = server->sessionFactory_->createSession(stream);
+            stream->data = static_cast<void *>(session);
+
+            server->streamHandler_->onConnectionOpen(session);
+        }
+
         auto buf = std::make_unique<Buffer>(buffer->len, buffer->base);
 
         server->streamHandler_->onReceiveData(Session::fromStream(stream), std::move(buf));
@@ -42,14 +49,17 @@ void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buff
 
 void GameServer::onStreamClosed(uv_handle_t *stream) {
     auto server = reinterpret_cast<GameServer *>(stream->loop->data);
-    auto session = Session::fromStream(reinterpret_cast<uv_stream_t *>(stream));
 
-    log->debug("Stream closed");
+    if (stream->data != nullptr) {
+        auto session = Session::fromStream(reinterpret_cast<uv_stream_t *>(stream));
 
-    server->streamHandler_->onConnectionClosed(session);
-    server->sessionFactory_->disposeSession(session);
+        log->debug("Stream closed");
 
-    stream->data = nullptr;
+        server->streamHandler_->onConnectionClosed(session);
+        server->sessionFactory_->disposeSession(session);
+
+        stream->data = nullptr;
+    }
 }
 
 void GameServer::createStream(uv_stream_t *serverStream) {
@@ -58,12 +68,10 @@ void GameServer::createStream(uv_stream_t *serverStream) {
     uv_tcp_t *client = (uv_tcp_t *) malloc(sizeof(uv_tcp_t));
     uv_stream_t *stream = (uv_stream_t *) client;
 
-    Session *session = server->sessionFactory_->createSession(stream);
+    client->data = nullptr;
+
 
     uv_tcp_init(serverStream->loop, client);
-
-    client->data = static_cast<void *>(session);
-    server->streamHandler_->onConnectionOpen(Session::fromStream(stream));
 
     int result = uv_accept(serverStream, stream);
 

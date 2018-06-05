@@ -34,5 +34,5 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
 }
 
 void HandshakeHandler::infoRetrieve(Player *player, std::unique_ptr<Buffer> buffer) {
-    log->info("Hey hey hey");
+    std::cout << "requestin info for player: " << player->data()->getUsername() << std::endl;
 }
