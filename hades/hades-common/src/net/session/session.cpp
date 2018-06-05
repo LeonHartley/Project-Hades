@@ -28,7 +28,7 @@ void Session::flushBuffer(std::unique_ptr<Buffer> buffer) {
     log->debug("Writing data to client with length %v", buf.len, buf.base);
 
     uv_write(writer, this->handle_, &buf, 1, &writeComplete);
-    this->buffer_ = nullptr;
+//    this->buffer_ = nullptr;
 }
 
 void Session::send(const Message &message) {
@@ -43,31 +43,28 @@ void Session::send(const Message &message) {
 }
 
 void Session::sendQueued(const Message &message) {
-    std::lock_guard<std::mutex> guard(this->msgQueueLock_);
-
-    if(this->buffer_ == nullptr) {
-        this->buffer_ = std::make_unique<Buffer>(256, true);
-    }
-
-    int currentIndex = this->buffer_->writerIndex();
-
-    this->buffer_->write<int>(0);
-    this->buffer_->write<short>(message.getId());
-
-    message.compose(this->buffer_.get());
-
-    this->buffer_->writeAt<int>(this->buffer_->writerIndex() - 4, currentIndex);
+//    std::lock_guard<std::mutex> guard(this->msgQueueLock_);
+//
+//    if(this->buffer_ == nullptr) {
+//        this->buffer_ = std::make_unique<Buffer>(256, true);
+//    }
+//
+//    int currentIndex = this->buffer_->writerIndex();
+//
+//    this->buffer_->write<int>(0);
+//    this->buffer_->write<short>(message.getId());
+//
+//    message.compose(this->buffer_.get());
+//
+//    this->buffer_->writeAt<int>(this->buffer_->writerIndex() - 4, currentIndex);
 }
 
 void Session::flush() {
-    std::lock_guard<std::mutex> guard(this->msgQueueLock_);
-    this->flushBuffer(std::move(this->buffer_));
-    this->buffer_ = nullptr;
+//    std::lock_guard<std::mutex> guard(this->msgQueueLock_);
+//    this->flushBuffer(std::move(this->buffer_));
+//    this->buffer_ = nullptr;
 }
 
-void Session::send(std::vector<Message *> messages) {
-
-}
 
 void Session::close() {
     uv_close(reinterpret_cast<uv_handle_t *>(this->handle_), &GameServer::onStreamClosed);

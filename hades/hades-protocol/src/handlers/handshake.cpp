@@ -19,7 +19,7 @@ void HandshakeHandler::readRelease(Session *session, std::unique_ptr<Buffer> buf
 void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> buffer) {
     const auto sso = buffer->read<std::string>();
 
-    std::shared_ptr<PlayerData> player(StorageCtx::players()->getDataByTicket(sso).release());
+    std::unique_ptr<PlayerData> player = StorageCtx::players()->getDataByTicket(sso);
 
     if (player == nullptr) {
         session->close();
@@ -29,7 +29,8 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
     session->send(AuthenticationOKMessageComposer());
     session->send(MotdNotificationMessageComposer("hiii"));
 
-//    session->playerData(std::move(player));
+    session->context(std::make_unique<PlayerContext>(
+            std::make_unique<Player>(session, std::move(player)), session));
 }
 
 void HandshakeHandler::infoRetrieve(Player *player, std::unique_ptr<Buffer> buffer) {

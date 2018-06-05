@@ -15,7 +15,6 @@ void GameServer::allocateUvBuffer(uv_stream_t *stream, size_t recommendedSize, u
 
 void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buffer) {
     auto server = static_cast<GameServer *>(stream->loop->data);
-    auto session = Session::fromStream(stream);
 
     if (read == UV_EOF) {
         uv_close((uv_handle_t *) stream, reinterpret_cast<uv_close_cb>(&GameServer::onStreamClosed));
@@ -37,13 +36,13 @@ void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buff
     } else {
         auto buf = std::make_unique<Buffer>(buffer->len, buffer->base);
 
-        server->streamHandler_->onReceiveData(session, std::move(buf));
+        server->streamHandler_->onReceiveData(Session::fromStream(stream), std::move(buf));
     }
 }
 
 void GameServer::onStreamClosed(uv_handle_t *stream) {
     auto server = reinterpret_cast<GameServer *>(stream->loop->data);
-    auto session = Session::fromStream(reinterpret_cast<uv_stream_t *>(stream->data));
+    auto session = Session::fromStream(reinterpret_cast<uv_stream_t *>(stream));
 
     log->debug("Stream closed");
 
@@ -54,15 +53,16 @@ void GameServer::onStreamClosed(uv_handle_t *stream) {
 }
 
 void GameServer::createStream(uv_stream_t *serverStream) {
-    auto server = reinterpret_cast<GameServer *>(serverStream->data);
+    auto server = static_cast<GameServer *>(serverStream->data);
 
     uv_tcp_t *client = (uv_tcp_t *) malloc(sizeof(uv_tcp_t));
     uv_stream_t *stream = (uv_stream_t *) client;
+
     Session *session = server->sessionFactory_->createSession(stream);
 
     uv_tcp_init(serverStream->loop, client);
 
-    client->data = reinterpret_cast<void *>(session);
+    client->data = static_cast<void *>(session);
     server->streamHandler_->onConnectionOpen(Session::fromStream(stream));
 
     int result = uv_accept(serverStream, stream);

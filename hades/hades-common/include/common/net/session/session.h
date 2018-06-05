@@ -6,30 +6,40 @@
 #include <memory>
 #include <mutex>
 #include <storage/models/player.h>
+#include <common/net/buffer.h>
 
 namespace hades {
     class Session;
 
+    static int counter = 0;
+
     class SessionContext {
     public:
+        SessionContext() {
+            std::cout << "creating #" << ++counter << std::endl;
+        }
+
+        ~SessionContext() {
+            std::cout << "disposing #" << counter << std::endl;
+        }
+
         virtual void handleMessage(Session *session, std::unique_ptr<Buffer> buffer);
     };
 
     class Session {
     public:
-        Session(uv_stream_t *handle) : handle_(handle), context_(std::make_unique<SessionContext>()) {
+        Session(uv_stream_t *handle, std::unique_ptr<SessionContext> ctx) : handle_(handle),
+                                                                            context_(std::move(ctx)) {
         }
 
         ~Session() {
-
+            this->context_ = nullptr;
         }
 
         void send(const Message &message);
 
-        void send(std::vector<Message *> messages);
-
         static Session *fromStream(uv_stream_t *stream) {
-            return reinterpret_cast<Session *>(stream->data);
+            return static_cast<Session *>(stream->data);
         }
 
         void close();
@@ -39,7 +49,7 @@ namespace hades {
         void flush();
 
         void context(std::unique_ptr<SessionContext> ctx) {
-            this->context_ = std::move(ctx);
+            context_ = std::move(ctx);
         }
 
         SessionContext *context() {
@@ -51,8 +61,8 @@ namespace hades {
 
         uv_stream_t *handle_;
 
-        std::mutex msgQueueLock_;
-        std::unique_ptr<Buffer> buffer_;
+//        std::mutex msgQueueLockm_;
+//        std::unique_ptr<Buffer> buffer_;
         std::unique_ptr<SessionContext> context_;
     };
 }
