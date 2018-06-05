@@ -9,13 +9,8 @@ namespace hades {
     public:
         SessionFactory() = default;
 
-        virtual Session *createSession(uv_stream_t *client) {
-
-            return new Session(client, std::make_unique<SessionContext>());
-        }
-
-        virtual void disposeSession(Session *session) {
-            delete session;
+        virtual std::unique_ptr<Session> createSession(uv_stream_t *client) {
+            return std::move(std::make_unique<Session>(client, std::make_unique<SessionContext>()));
         }
     };
 }

@@ -32,19 +32,25 @@ void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buff
 
         uv_write(req, stream, &buffer, 1, [](uv_write_t *req, int status) {
             uv_close(reinterpret_cast<uv_handle_t *>(req->handle), &GameServer::onStreamClosed);
-            free(req);
         });
     } else {
-        if (stream->data == nullptr) {
-            Session *session = server->sessionFactory_->createSession(stream);
-            stream->data = static_cast<void *>(session);
+        Session *session = nullptr;
 
-            server->streamHandler_->onConnectionOpen(session);
+        if (stream->data == nullptr) {
+            std::unique_ptr<Session> newSession = server->sessionFactory_->createSession(stream);
+            const long id = newSession->id();
+
+            session = newSession.get();
+
+            stream->data = static_cast<void *>(session);
+            Session::registerSession(id, std::move(newSession));
         }
 
         auto buf = std::make_unique<Buffer>(buffer->len, buffer->base);
 
-        server->streamHandler_->onReceiveData(Session::fromStream(stream), std::move(buf));
+        server->streamHandler_->onReceiveData(
+                session == nullptr ? Session::fromStream(stream) : session,
+                std::move(buf));
     }
 }
 
@@ -57,8 +63,8 @@ void GameServer::onStreamClosed(uv_handle_t *stream) {
         log->debug("Stream closed");
 
         server->streamHandler_->onConnectionClosed(session);
-        server->sessionFactory_->disposeSession(session);
 
+        Session::removeSession(session->id());
         stream->data = nullptr;
     }
 

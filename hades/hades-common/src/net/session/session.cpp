@@ -2,6 +2,7 @@
 #include <iostream>
 #include <common/log/log.h>
 #include <common/net/server.h>
+#include <map>
 
 using namespace hades;
 
@@ -26,11 +27,12 @@ void Session::flushBuffer(std::unique_ptr<Buffer> buffer) {
     writer->data = buf.base;
 
     uv_write(writer, this->handle_, &buf, 1, &writeComplete);
+    free(buffer->base());
 //    this->buffer_ = nullptr;
 }
 
 void Session::send(const Message &message) {
-    Buffer buf(256, true);
+    Buffer buf(256, true, false);
 
     buf.write<int>(0);
     buf.write<short>(message.getId());
@@ -66,6 +68,35 @@ void Session::flush() {
 
 void Session::close() {
     uv_close(reinterpret_cast<uv_handle_t *>(this->handle_), &GameServer::onStreamClosed);
+}
+
+Session *Session::fromStream(uv_stream_t *stream) {
+    return static_cast<Session *>(stream->data);
+}
+
+static std::mutex sessionsMutex_;
+static std::map<long, std::unique_ptr<Session>> sessions_;
+
+Session *Session::fromId(long id) {
+    std::lock_guard<std::mutex> lock(sessionsMutex_);
+
+    auto found = &sessions_.find(id)->second;
+
+    if(found != nullptr) {
+        return found->get();
+    }
+
+    return nullptr;
+}
+
+void Session::registerSession(long id, std::unique_ptr<Session> session) {
+    std::lock_guard<std::mutex> lock(sessionsMutex_);
+
+    sessions_.emplace(id, std::move(session));
+}
+
+void Session::removeSession(long id) {
+    sessions_.erase(id);
 }
 
 void SessionContext::handleMessage(Session *session, std::unique_ptr<Buffer> buffer) {
