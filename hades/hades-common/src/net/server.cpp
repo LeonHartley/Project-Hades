@@ -32,6 +32,7 @@ void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buff
 
         uv_write(req, stream, &buffer, 1, [](uv_write_t *req, int status) {
             uv_close(reinterpret_cast<uv_handle_t *>(req->handle), &GameServer::onStreamClosed);
+            free(req);
         });
     } else {
         if (stream->data == nullptr) {
@@ -60,6 +61,8 @@ void GameServer::onStreamClosed(uv_handle_t *stream) {
 
         stream->data = nullptr;
     }
+
+    free(stream);
 }
 
 void GameServer::createStream(uv_stream_t *serverStream) {
@@ -69,7 +72,6 @@ void GameServer::createStream(uv_stream_t *serverStream) {
     uv_stream_t *stream = (uv_stream_t *) client;
 
     client->data = nullptr;
-
 
     uv_tcp_init(serverStream->loop, client);
 

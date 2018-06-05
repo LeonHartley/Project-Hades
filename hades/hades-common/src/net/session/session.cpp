@@ -30,7 +30,7 @@ void Session::flushBuffer(std::unique_ptr<Buffer> buffer) {
 }
 
 void Session::send(const Message &message) {
-    Buffer buf(256, true, false);
+    Buffer buf(256, true);
 
     buf.write<int>(0);
     buf.write<short>(message.getId());
