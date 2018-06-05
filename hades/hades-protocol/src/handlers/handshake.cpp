@@ -5,6 +5,7 @@
 
 #include <common/net/session/session.h>
 #include <common/player/player.h>
+#include <protocol/composers/user.h>
 
 using namespace hades;
 
@@ -18,8 +19,7 @@ void HandshakeHandler::readRelease(Session *session, std::unique_ptr<Buffer> buf
 
 void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> buffer) {
     const auto sso = buffer->read<std::string>();
-
-    std::unique_ptr<PlayerData> player = StorageCtx::players()->getDataByTicket(sso);
+    auto player = StorageCtx::players()->getDataByTicket(sso);
 
     if (player == nullptr) {
         session->close();
@@ -27,7 +27,8 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
     }
 
     session->send(AuthenticationOKMessageComposer());
-    session->send(MotdNotificationMessageComposer("hiii"));
+    session->send(MotdNotificationMessageComposer("this is hades"));
+    session->send(FuserightsMessageComposer(true /*give everyone club cos im a nice guy*/, player->getRank()));
 
     session->context(std::make_unique<PlayerContext>(
             std::make_unique<Player>(session, std::move(player)), session));

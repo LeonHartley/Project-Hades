@@ -36,6 +36,7 @@ namespace hades {
 
         ~Session() {
             this->context_ = nullptr;
+            std::cout << "SESSION DISPOSED" << std::endl;
         }
 
         void send(const Message &message);

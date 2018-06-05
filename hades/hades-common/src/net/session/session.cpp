@@ -96,6 +96,8 @@ void Session::registerSession(long id, std::unique_ptr<Session> session) {
 }
 
 void Session::removeSession(long id) {
+    std::lock_guard<std::mutex> lock(sessionsMutex_);
+
     sessions_.erase(id);
 }
 
