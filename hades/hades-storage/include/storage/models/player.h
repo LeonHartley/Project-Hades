@@ -23,6 +23,8 @@ namespace hades {
                                                            favouriteGroup_(favouriteGroup),
                                                            currentQuest_(currentQuest) {}
 
+        ~PlayerData() {}
+
         int getId() const {
             return id_;
         }

@@ -1,7 +1,9 @@
 #pragma once
 
-#include <common/net/session/session.h>
 #include <memory>
+#include <common/net/session/session.h>
+#include <common/player/player.h>
+
 
 namespace hades {
     class HandshakeHandler {
@@ -11,5 +13,6 @@ namespace hades {
 
         static void authentication(Session *session, std::unique_ptr<Buffer> buffer);
 
+        static void infoRetrieve(Player *session, std::unique_ptr<Buffer> buffer);
     };
 }

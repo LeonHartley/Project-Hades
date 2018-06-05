@@ -1,8 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "streamhandler.h"
-#include "server.h"
+#include <common/net/server.h>
 
 namespace hades {
     class ServerBuilder {

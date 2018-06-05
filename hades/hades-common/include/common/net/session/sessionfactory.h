@@ -2,7 +2,7 @@
 
 #include <uv.h>
 #include <memory>
-#include "session.h"
+#include <common/net/session/session.h>
 
 namespace hades {
     class SessionFactory {

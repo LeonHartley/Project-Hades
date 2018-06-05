@@ -18,22 +18,20 @@
 
 INITIALIZE_EASYLOGGINGPP
 
-
 auto const log = hades::LoggerProvider::get("Boot");
 
 namespace hades {
-    class TestSubscriber : public CommunicationSubscriber {
-        void onMessage(Communication *ctx, short type, std::string id, std::unique_ptr<Buffer> msg) override {
-            if(type == 1337) {
-                std::string payload = msg->read<std::string>();
-
-                log->info("Received subscribed msg [%v] with data %v from %v", type, payload, id);
-            }
-//            log->info("Received subscribed msg with data %v, %v", type, id);
-
-            free(msg->base());
-        }
-    };
+//    class TestSubscriber : public CommunicationSubscriber {
+//        void onMessage(Communication *ctx, short type, std::string id, std::unique_ptr<Buffer> msg) override {
+//            if(type == 1337) {
+//                std::string payload = msg->read<std::string>();
+//
+//                log->info("Received subscribed msg [%v] with data %v from %v", type, payload, id);
+//            }
+//
+//            free(msg->base());
+//        }
+//    };
 
     void initialiseStorage() {
         std::shared_ptr<ConnectionPool> pool =
@@ -41,10 +39,6 @@ namespace hades {
 
         StorageCtx::ctx(std::make_shared<StorageCtx>(std::move(pool)));
         StorageCtx::players(std::make_shared<MySQLPlayerRepository>(StorageCtx::ctx()));
-
-        auto player = StorageCtx::players()->getDataById(1);
-
-        LoggerProvider::get("main")->info("Player %v", player->getUsername());
     }
 
     void initialiseNet() {
@@ -64,13 +58,13 @@ namespace hades {
 }
 
 int main(int argc, char *argv[]) {
-    hades::Communication::start("peer-1", hades::RedisConfig{
-            .host = "localhost",
-            .port = 6379
-    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
+//    hades::Communication::start("peer-1", hades::RedisConfig{
+//            .host = "localhost",
+//            .port = 6379
+//    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
 
     hades::initialiseStorage();
     hades::initialiseNet();
 
-    hades::Communication::dispose();
+//    hades::Communication::dispose();
 }

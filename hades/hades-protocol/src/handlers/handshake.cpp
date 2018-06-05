@@ -3,6 +3,9 @@
 #include <protocol/composers/notifications.h>
 #include <storage/storagectx.h>
 
+#include <common/net/session/session.h>
+#include <common/player/player.h>
+
 using namespace hades;
 
 const auto log = LoggerProvider::get("HandshakeHandler");
@@ -16,7 +19,7 @@ void HandshakeHandler::readRelease(Session *session, std::unique_ptr<Buffer> buf
 void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> buffer) {
     const auto sso = buffer->read<std::string>();
 
-    auto player = StorageCtx::players()->getDataByTicket(sso);
+    std::shared_ptr<PlayerData> player(StorageCtx::players()->getDataByTicket(sso).release());
 
     if (player == nullptr) {
         session->close();
@@ -25,4 +28,10 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
 
     session->send(AuthenticationOKMessageComposer());
     session->send(MotdNotificationMessageComposer("hiii"));
+
+//    session->playerData(std::move(player));
+}
+
+void HandshakeHandler::infoRetrieve(Player *player, std::unique_ptr<Buffer> buffer) {
+    log->info("Hey hey hey");
 }

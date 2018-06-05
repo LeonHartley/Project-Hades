@@ -33,7 +33,6 @@ namespace hades {
         uv_loop_t *loop_;
 
         const std::unique_ptr<SessionFactory> sessionFactory_;
-
         const std::unique_ptr<StreamHandler> streamHandler_;
 
         static void allocateUvBuffer(uv_stream_t *stream, size_t recommendedSize, uv_buf_t *out);

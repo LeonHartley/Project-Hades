@@ -19,5 +19,6 @@ void StreamHandler::onReceiveData(Session *session, std::unique_ptr<Buffer> buff
     const int length = buffer->read<int>();
 
     log->debug("Message received with length %v", length);
-    this->messageDispatch_.dispatch(session, std::move(buffer));
+
+    session->context()->handleMessage(session, std::move(buffer));
 }

@@ -17,6 +17,6 @@ add_library(hades-common STATIC
         include/common/ctx/ctx.h
         include/common/net/messages/message.h
         include/common/log/log.h
-        src/log/log.cpp src/pool.cpp include/common/pool.h include/common/net/messages/messagehandler.h src/net/session/session.cpp src/net/messages/messagehandler.cpp ${hiredis} include/common/comms.h src/comms.cpp include/common/util/base64.h src/util/base64.cpp)
+        src/log/log.cpp src/pool.cpp include/common/pool.h include/common/net/messages/messagehandler.h src/net/session/session.cpp src/net/messages/messagehandler.cpp ${hiredis} include/common/comms.h src/comms.cpp include/common/util/base64.h src/util/base64.cpp include/common/player/player.h src/player/player.cpp)
 
 target_link_libraries(hades-common hades-protocol)

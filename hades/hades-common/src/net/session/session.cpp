@@ -72,3 +72,7 @@ void Session::send(std::vector<Message *> messages) {
 void Session::close() {
     uv_close(reinterpret_cast<uv_handle_t *>(this->handle_), &GameServer::onStreamClosed);
 }
+
+void SessionContext::handleMessage(Session *session, std::unique_ptr<Buffer> buffer) {
+    MessageDispatch::dispatch(session, std::move(buffer));
+}
