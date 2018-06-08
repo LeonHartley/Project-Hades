@@ -6,6 +6,7 @@
 #include <common/net/buffer.h>
 #include <common/net/session/sessionfactory.h>
 #include <common/net/serverbuilder.h>
+#include <common/dispatch/dispatch.h>
 
 #include <storage/storagectx.h>
 #include <storage/mysql/mysqlplayers.h>
@@ -22,7 +23,8 @@ auto const log = hades::LoggerProvider::get("Boot");
 
 namespace hades {
 //    class TestSubscriber : public CommunicationSubscriber {
-//        void onMessage(Communication *ctx, short type, std::string id, std::unique_ptr<Buffer> msg) override {
+//        void onMessage(Communication *ctx, short type, std::string id, std::uniqu
+// e_ptr<Buffer> msg) override {
 //            if(type == 1337) {
 //                std::string payload = msg->read<std::string>();
 //
@@ -62,6 +64,10 @@ int main(int argc, char *argv[]) {
 //            .host = "localhost",
 //            .port = 6379
 //    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
+
+    hades::Dispatch dispatch(1);
+
+    dispatch.runAll();
 
     hades::initialiseStorage();
     hades::initialiseNet();

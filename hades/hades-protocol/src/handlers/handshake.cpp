@@ -26,8 +26,10 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
         return;
     }
 
+    const std::string &str = "this is hades";
+
     session->send(AuthenticationOKMessageComposer());
-    session->send(MotdNotificationMessageComposer("this is hades"));
+    session->send(MotdNotificationMessageComposer(str));
     session->send(FuserightsMessageComposer(true /*give everyone club cos im a nice guy*/, player->getRank()));
 
     session->context(std::make_unique<PlayerContext>(
