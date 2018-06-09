@@ -69,6 +69,10 @@ int main(int argc, char *argv[]) {
 
     dispatch.runAll();
 
+    dispatch.async([](void *arg) {
+        std::cout << "yoo it works ;D" << std::endl;
+    }, nullptr);
+
     hades::initialiseStorage();
     hades::initialiseNet();
 
