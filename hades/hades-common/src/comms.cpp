@@ -6,7 +6,7 @@
 
 using namespace hades;
 
-const auto log = LoggerProvider::get("Comms");
+const auto logger = LoggerProvider::get("Comms");
 const std::string availableServicesTopic = "available-services";
 
 static Communication *communicationCtx;
@@ -18,7 +18,7 @@ void Communication::dispose() {
 
 void onRedisConnected(const redisAsyncContext *ctx, int status) {
     if (!status) {
-        log->info("Redis server connected");
+        logger->info("Redis server connected");
     }
 }
 
@@ -36,7 +36,7 @@ void Communication::threadCtx(void *ctx) {
     auto comms = static_cast<Communication *>(ctx);
 
     if (comms->listenClient()->err) {
-        log->error("Failed to connect to Redis, error: %v", comms->listenClient()->err);
+        logger->error("Failed to connect to Redis, error: %v", comms->listenClient()->err);
         return;
     }
 
@@ -64,7 +64,7 @@ void Communication::threadCtx(void *ctx) {
                 if (topic == availableServicesTopic) {
                     std::string data(payload->str);
 
-                    log->info("service available: %v", data);
+                    logger->info("service available: %v", data);
                 } else {
                     auto ctx = static_cast<Communication *>(redis->data);
                     size_t size = 0;
@@ -92,7 +92,7 @@ void Communication::threadCtx(void *ctx) {
 
 void Communication::start(std::string serviceName, RedisConfig redisConfig,
                           std::unique_ptr<CommunicationSubscriber> subscriber) {
-    communicationCtx = new Communication(serviceName, std::move(redisConfig), std::move(subscriber));
+    communicationCtx = new Communication(std::move(serviceName), std::move(redisConfig), std::move(subscriber));
     uv_thread_create(communicationCtx->thread_, &Communication::threadCtx,
                      static_cast<void *>(communicationCtx));
 }

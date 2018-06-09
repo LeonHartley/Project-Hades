@@ -1,6 +1,6 @@
 #pragma once
 
-#include <malloc.h>
+#include <cstdlib>
 #include <cstring>
 
 namespace hades {

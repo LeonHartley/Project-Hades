@@ -3,7 +3,7 @@
 
 using namespace hades;
 
-const auto log = LoggerProvider::get("PlayerRepository");
+const auto logger = LoggerProvider::get("PlayerRepository");
 
 std::unique_ptr<PlayerData> MySQLPlayerRepository::getDataById(int id) {
     ConnectionGuard guard = this->ctx_->pool()->open();
@@ -30,7 +30,7 @@ std::unique_ptr<PlayerData> MySQLPlayerRepository::getDataById(int id) {
         }
     } catch (sql::SQLException exception) {
         // handle exception
-        log->error("Failed to player by ID: %v, error: %v", id, exception.getSQLState());
+        logger->error("Failed to player by ID: %v, error: %v", id, exception.getSQLState());
     }
 
     return nullptr;
@@ -61,7 +61,7 @@ std::unique_ptr<PlayerData> MySQLPlayerRepository::getDataByTicket(std::string s
         }
     } catch (sql::SQLException exception) {
         // handle exception
-        log->error("Failed to player by auth ticket: %v, error: %v", sso, exception.getSQLState());
+        logger->error("Failed to player by auth ticket: %v, error: %v", sso, exception.getSQLState());
     }
 
     return nullptr;

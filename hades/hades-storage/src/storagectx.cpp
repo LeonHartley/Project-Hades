@@ -8,8 +8,6 @@
 
 using namespace hades;
 
-const auto log = LoggerProvider::get("StorageCtx");
-
 static std::shared_ptr<StorageCtx> currentCtx;
 
 void StorageCtx::ctx(std::shared_ptr<StorageCtx> ctx) {

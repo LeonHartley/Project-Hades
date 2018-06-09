@@ -6,10 +6,10 @@
 
 using namespace hades;
 
-auto const log = LoggerProvider::get("Session");
+auto const logger = LoggerProvider::get("Session");
 
 void writeComplete(uv_write_t *writer, int status) {
-    log->debug("write status: %v", status);
+    logger->debug("write status: %v", status);
 
     free(writer->data);
     free(writer);

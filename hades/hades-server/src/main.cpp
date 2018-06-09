@@ -19,7 +19,7 @@
 
 INITIALIZE_EASYLOGGINGPP
 
-auto const log = hades::LoggerProvider::get("Boot");
+auto const logger = hades::LoggerProvider::get("Boot");
 
 namespace hades {
 //    class TestSubscriber : public CommunicationSubscriber {
@@ -28,7 +28,7 @@ namespace hades {
 //            if(type == 1337) {
 //                std::string payload = msg->read<std::string>();
 //
-//                log->info("Received subscribed msg [%v] with data %v from %v", type, payload, id);
+//                logger->info("Received subscribed msg [%v] with data %v from %v", type, payload, id);
 //            }
 //
 //            free(msg->base());

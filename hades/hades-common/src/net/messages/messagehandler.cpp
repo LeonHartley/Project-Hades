@@ -5,7 +5,7 @@
 
 using namespace hades;
 
-auto const log = LoggerProvider::get("MessageDispatch");
+auto const logger = LoggerProvider::get("MessageDispatch");
 
 typedef void (*SessionMessageHandler)(Session *, std::unique_ptr<Buffer> buffer);
 
@@ -27,7 +27,7 @@ void MessageDispatch::dispatch(hades::Session *session, std::unique_ptr<hades::B
     if (handler != nullptr) {
         handler(session, std::move(buffer));
     } else {
-        log->debug("Unhandled message with id %v", header);
+        logger->debug("Unhandled message with id %v", header);
     }
 }
 
@@ -38,6 +38,6 @@ void MessageDispatch::dispatch(hades::Player *player, std::unique_ptr<hades::Buf
     if (handler != nullptr) {
         handler(player, std::move(buffer));
     } else {
-        log->debug("Unhandled message with id %v", header);
+        logger->debug("Unhandled message with id %v", header);
     }
 }

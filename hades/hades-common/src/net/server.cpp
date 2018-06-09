@@ -5,7 +5,7 @@
 
 using namespace hades;
 
-auto const log = LoggerProvider::get("GameServer");
+auto const logger = LoggerProvider::get("GameServer");
 const char policyFile[208] = "<?xml version=\"1.0\"?>\r\n<!DOCTYPE cross-domain-policy \ SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">\r\n<cross-domain-policy>\r\n<allow-access-from domain=\"*\" to-ports=\"*\" />\r\n</cross-domain-policy>\0";
 
 void GameServer::allocateUvBuffer(uv_stream_t *stream, size_t recommendedSize, uv_buf_t *out) {
@@ -60,7 +60,7 @@ void GameServer::onStreamClosed(uv_handle_t *stream) {
     if (stream->data != nullptr) {
         auto session = Session::fromStream(reinterpret_cast<uv_stream_t *>(stream));
 
-        log->debug("Stream closed");
+        logger->debug("Stream closed");
 
         server->streamHandler_->onConnectionClosed(session);
 
@@ -84,14 +84,14 @@ void GameServer::createStream(uv_stream_t *serverStream) {
     int result = uv_accept(serverStream, stream);
 
     if (result == 0) {
-        log->trace("Starting read for stream");
+        logger->trace("Starting read for stream");
 
         uv_read_start(stream,
                       reinterpret_cast<uv_alloc_cb>(&GameServer::allocateUvBuffer),
                       reinterpret_cast<uv_read_cb>(&GameServer::onDataReceived));
 
     } else {
-        log->debug("Failed to accept client, err: %v", uv_err_name(result));
+        logger->debug("Failed to accept client, err: %v", uv_err_name(result));
     }
 }
 
