@@ -5,15 +5,25 @@
 #include <mutex>
 #include <memory>
 #include <iostream>
-#include <dispatch/source.h>
+#include <atomic>
 
 namespace hades {
     typedef void (*DispatchAsyncCallback)(void *ctx);
 
     class DispatchTimer {
     public:
-        DispatchTimer(uv_loop_t *loop) : loop_(loop), timer_(static_cast<uv_timer_t *>(malloc(sizeof(uv_timer_t)))) {
-            uv_timer_start
+        DispatchTimer(DispatchAsyncCallback callback, uv_loop_t *loop,
+                      void *ctx, unsigned long initialDelay, unsigned long timeout) : initialDelay_(initialDelay),
+                                                                                      timeout_(timeout),
+                                                                                      callback_(callback),
+                                                                                      timer_(static_cast<uv_timer_t *>(malloc(
+                                                                                              sizeof(uv_timer_t)))) {
+            uv_timer_init(loop, timer_);
+            timer_->data = this;
+        }
+
+        void start() {
+            uv_timer_start(timer_, &callback, initialDelay_, timeout_);
         }
 
         ~DispatchTimer() {
@@ -22,8 +32,17 @@ namespace hades {
         }
 
     private:
-        uv_loop_t *loop_;
+        static void callback(uv_timer_t *ctx) {
+            auto timer = static_cast<DispatchTimer *>(ctx->data);
+
+            timer->callback_(timer->ctx_);
+        }
+
         uv_timer_t *timer_;
+        void *ctx_;
+        unsigned long initialDelay_;
+        unsigned long timeout_;
+        DispatchAsyncCallback callback_;
     };
 
     class DispatchLoop {
@@ -74,9 +93,12 @@ namespace hades {
             nextLoop()->async(callback, arg);
         }
 
-        std::unique_ptr<DispatchTimer> timer() {
+        std::unique_ptr<DispatchTimer> timer(DispatchAsyncCallback callback, unsigned long initialDelay,
+                                             unsigned long timeout, void *data) {
             auto *loop = nextLoop();
-            auto timer = std::make_unique<DispatchTimer>(loop->loop());
+            auto timer = std::make_unique<DispatchTimer>(callback, loop->loop(), data, initialDelay, timeout);
+
+            return std::move(timer);
         };
 
     private:
@@ -84,7 +106,7 @@ namespace hades {
             int index = index_++;
 
             if (index >= loopCount_) {
-                index_ = 0;
+                index_, index = 0;
             }
 
             return loops_[index].get();

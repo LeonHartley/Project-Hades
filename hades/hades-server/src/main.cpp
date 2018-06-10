@@ -66,13 +66,17 @@ int main(int argc, char *argv[]) {
 //    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
 
     hades::Dispatch dispatch(1);
+    auto timer = dispatch.timer([](void *ctx) {
+        std::cout << "hellooooo" << std::endl;
+    }, 500, 500, nullptr);
 
     dispatch.runAll();
+    timer->start();
 
     dispatch.async([](void *arg) {
         std::cout << "yoo it works ;D" << std::endl;
     }, nullptr);
-
+    
     hades::initialiseStorage();
     hades::initialiseNet();
 
