@@ -16,6 +16,7 @@ namespace hades {
                       void *ctx, unsigned long initialDelay, unsigned long timeout) : initialDelay_(initialDelay),
                                                                                       timeout_(timeout),
                                                                                       callback_(callback),
+                                                                                      ctx_(ctx),
                                                                                       timer_(static_cast<uv_timer_t *>(malloc(
                                                                                               sizeof(uv_timer_t)))) {
             uv_timer_init(loop, timer_);
@@ -89,14 +90,19 @@ namespace hades {
             }
         }
 
-        void async(DispatchAsyncCallback callback, void *arg) {
-            nextLoop()->async(callback, arg);
+
+        template<typename Ctx>
+        void async(void(*callback)(Ctx *), Ctx *arg) {
+            nextLoop()->async(reinterpret_cast<DispatchAsyncCallback>(callback), static_cast<void *>(arg));
         }
 
-        std::unique_ptr<DispatchTimer> timer(DispatchAsyncCallback callback, unsigned long initialDelay,
-                                             unsigned long timeout, void *data) {
+        template<typename Ctx>
+        std::unique_ptr<DispatchTimer> timer(void(*callback)(Ctx *), unsigned long initialDelay,
+                                             unsigned long timeout, Ctx *data) {
             auto *loop = nextLoop();
-            auto timer = std::make_unique<DispatchTimer>(callback, loop->loop(), data, initialDelay, timeout);
+            auto timer = std::make_unique<DispatchTimer>(reinterpret_cast<DispatchAsyncCallback>(callback),
+                                                         loop->loop(),
+                                                         static_cast<void *>(data), initialDelay, timeout);
 
             return std::move(timer);
         };

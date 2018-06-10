@@ -66,17 +66,26 @@ int main(int argc, char *argv[]) {
 //    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
 
     hades::Dispatch dispatch(1);
-    auto timer = dispatch.timer([](void *ctx) {
-        std::cout << "hellooooo" << std::endl;
-    }, 500, 500, nullptr);
+
+    struct Aaa {
+        std::string username;
+    };
+
+    auto ctx = Aaa {
+        .username = "Leon"
+    };
+
+    auto timer = dispatch.timer<Aaa>([](Aaa *ctx) {
+        std::cout << "username = " << ctx->username << std::endl;
+    }, 500, 500, &ctx);
 
     dispatch.runAll();
     timer->start();
 
-    dispatch.async([](void *arg) {
+    dispatch.async<void>([](void *arg) {
         std::cout << "yoo it works ;D" << std::endl;
     }, nullptr);
-    
+
     hades::initialiseStorage();
     hades::initialiseNet();
 
