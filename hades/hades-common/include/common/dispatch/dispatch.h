@@ -90,7 +90,6 @@ namespace hades {
             }
         }
 
-
         template<typename Ctx>
         void async(void(*callback)(Ctx *), Ctx *arg) {
             nextLoop()->async(reinterpret_cast<DispatchAsyncCallback>(callback), static_cast<void *>(arg));
@@ -106,7 +105,6 @@ namespace hades {
 
             return std::move(timer);
         };
-
     private:
         DispatchLoop *nextLoop() {
             int index = index_++;
@@ -121,5 +119,11 @@ namespace hades {
         std::vector<std::unique_ptr<DispatchLoop>> loops_;
         std::atomic<int> index_;
         int loopCount_;
+    };
+
+    class DispatchGroups {
+    public:
+        static std::shared_ptr<Dispatch> Game;
+        static std::shared_ptr<Dispatch> Util;
     };
 }

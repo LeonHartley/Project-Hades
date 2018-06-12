@@ -35,6 +35,14 @@ namespace hades {
 //        }
 //    };
 
+    void initialiseDispatch() {
+//        DispatchGroups::Game = new Dispatch(4);
+//        DispatchGroups::Util = new Dispatch(2);
+
+//        DispatchGroups::Game->runAll();
+//        DispatchGroups::Util->runAll();
+    }
+
     void initialiseStorage() {
         std::shared_ptr<ConnectionPool> pool =
                 std::make_shared<ConnectionPool>(5, ConnectionFactory("localhost", "root", "", "cometsrv"));
@@ -65,29 +73,13 @@ int main(int argc, char *argv[]) {
 //            .port = 6379
 //    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
 
-    hades::Dispatch dispatch(1);
-
-    struct Aaa {
-        std::string username;
-    };
-
-    auto ctx = Aaa {
-        .username = "Leon"
-    };
-
-    auto timer = dispatch.timer<Aaa>([](Aaa *ctx) {
-        std::cout << "username = " << ctx->username << std::endl;
-    }, 500, 500, &ctx);
-
-    dispatch.runAll();
-    timer->start();
-
-    dispatch.async<void>([](void *arg) {
-        std::cout << "yoo it works ;D" << std::endl;
-    }, nullptr);
-
+    hades::initialiseDispatch();
     hades::initialiseStorage();
     hades::initialiseNet();
 
+
 //    hades::Communication::dispose();
+
+//    delete hades::DispatchGroups::Game;
+//    delete hades::DispatchGroups::Util;
 }

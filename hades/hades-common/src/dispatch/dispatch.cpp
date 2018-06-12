@@ -8,6 +8,9 @@ struct DispatchAsync {
 
 };
 
+//DispatchGroups::Game = std::make_shared<Dispatch>(4);
+//DispatchGroups::Util = std::make_shared<Dispatch>(4);
+
 static void asyncCallback(uv_async_t *handle) {
     if (handle->data != nullptr) {
         // do work

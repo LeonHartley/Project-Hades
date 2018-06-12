@@ -9,8 +9,6 @@ using namespace hades;
 auto const logger = LoggerProvider::get("Session");
 
 void writeComplete(uv_write_t *writer, int status) {
-    logger->debug("write status: %v", status);
-
     free(writer->data);
     free(writer);
 }

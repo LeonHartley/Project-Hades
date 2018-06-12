@@ -6,6 +6,7 @@
 #include <common/net/session/session.h>
 #include <common/player/player.h>
 #include <protocol/composers/user.h>
+#include <protocol/composers/catalog.h>
 
 using namespace hades;
 
@@ -30,12 +31,16 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
 
     session->send(AuthenticationOKMessageComposer());
     session->send(MotdNotificationMessageComposer(str));
-    session->send(FuserightsMessageComposer(true /*give everyone club cos im a nice guy*/, player->getRank()));
 
     session->context(std::make_unique<PlayerContext>(
             std::make_unique<Player>(session, std::move(player)), session));
 }
 
 void HandshakeHandler::infoRetrieve(Player *player, std::unique_ptr<Buffer> buffer) {
-    std::cout << "requestin info for player: " << player->data()->getUsername() << std::endl;
+    player->send(UserObjectMessageComposer(player->data()));
+    player->send(FuserightsMessageComposer(true /*give everyone club cos im a nice guy*/, player->data()->getRank()));
+    player->send(FavouriteRoomsMessageComposer());
+    player->send(BuildersClubMembershipMessageComposer());
+    player->send(AllowancesMessageComposer());
+    player->send(HomeRoomMessageComposer());
 }
