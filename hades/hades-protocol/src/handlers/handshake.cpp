@@ -7,6 +7,7 @@
 #include <common/player/player.h>
 #include <protocol/composers/user.h>
 #include <protocol/composers/catalog.h>
+#include <protocol/composers/balance.h>
 
 using namespace hades;
 
@@ -27,10 +28,10 @@ void HandshakeHandler::authentication(Session *session, std::unique_ptr<Buffer> 
         return;
     }
 
-    const std::string &str = "this is hades";
+    const std::string str = "this is hades";
 
     session->send(AuthenticationOKMessageComposer());
-    session->send(MotdNotificationMessageComposer(str));
+    session->send(MotdNotificationMessageComposer(std::move(str)));
 
     session->context(std::make_unique<PlayerContext>(
             std::make_unique<Player>(session, std::move(player)), session));
@@ -43,4 +44,12 @@ void HandshakeHandler::infoRetrieve(Player *player, std::unique_ptr<Buffer> buff
     player->send(BuildersClubMembershipMessageComposer());
     player->send(AllowancesMessageComposer());
     player->send(HomeRoomMessageComposer());
+
+    player->send(CreditBalanceMessageComposer(player->data()->getCredits()));
+    player->send(CurrenciesBalanceMessageComposer({
+                                                          std::make_tuple(0, player->data()->getActivityPoints()),
+                                                          std::make_tuple(105, player->data()->getVipPoints()),
+                                                          std::make_tuple(5, player->data()->getVipPoints()),
+                                                          std::make_tuple(106, player->data()->getSeasonalPoints())
+                                                  }));
 }

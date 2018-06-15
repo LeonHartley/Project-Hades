@@ -76,7 +76,7 @@ namespace hades {
         }
 
         void compose(Buffer *buffer) const override {
-            buffer->write<int>(0); // Count
+            buffer->write<int>(16); // Count
             buffer->write<std::string>("USE_GUIDE_TOOL");
             buffer->write<std::string>("");
             buffer->write<bool>(false);
