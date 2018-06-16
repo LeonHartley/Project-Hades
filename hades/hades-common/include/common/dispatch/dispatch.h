@@ -6,8 +6,15 @@
 #include <memory>
 #include <iostream>
 #include <atomic>
+#include <map>
+#include <common/util/lock.h>
+
+#define RoomDispatch 0
+#define GameDispatch 1
+#define StorageDispatch 2
 
 namespace hades {
+
     typedef void (*DispatchAsyncCallback)(void *ctx);
 
     class DispatchTimer {
@@ -123,7 +130,22 @@ namespace hades {
 
     class DispatchGroups {
     public:
-        static std::shared_ptr<Dispatch> Game;
-        static std::shared_ptr<Dispatch> Util;
+        static Dispatch *group(int id) {
+            RwLockGuard lock(&mutex_, READ);
+
+            if (dispatchGroups_.count(id)) {
+                return dispatchGroups_.find(id)->second.get();
+            }
+        }
+
+        static void addGroup(int id, std::unique_ptr<Dispatch> group) {
+            RwLockGuard lock(&mutex_, WRITE);
+
+            dispatchGroups_.emplace(id, std::move(group));
+        }
+
+    private:
+        static RwMutex mutex_;
+        static std::map<int, std::unique_ptr<Dispatch>> dispatchGroups_;
     };
 }

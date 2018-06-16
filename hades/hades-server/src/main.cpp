@@ -15,7 +15,7 @@
 #include <hiredis/hiredis.h>
 #include <hiredis/adapters/libuv.h>
 
-#include <common/comms.h>
+#include <common/comms/comms.h>
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -36,11 +36,12 @@ namespace hades {
 //    };
 
     void initialiseDispatch() {
-//        DispatchGroups::Game = new Dispatch(4);
-//        DispatchGroups::Util = new Dispatch(2);
+        DispatchGroups::addGroup(RoomDispatch, std::make_unique<Dispatch>(3));
+        DispatchGroups::addGroup(GameDispatch, std::make_unique<Dispatch>(3));
 
-//        DispatchGroups::Game->runAll();
-//        DispatchGroups::Util->runAll();
+        DispatchGroups::group(RoomDispatch)->async<void>([](void *arg) {
+
+        }, nullptr);
     }
 
     void initialiseStorage() {

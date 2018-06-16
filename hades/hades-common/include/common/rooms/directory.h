@@ -7,7 +7,9 @@ namespace hades {
     class RoomDirectory {
         static bool isActive(int roomId);
 
-        static void activeRoom(int roomId, int roomService);
+        static int roomServiceByRoomId(int roomId);
+
+        static void addActiveRoom(int roomId, int roomService);
 
         static void removeActiveRoom(int roomId);
 

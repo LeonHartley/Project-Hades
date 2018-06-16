@@ -10,7 +10,7 @@ bool RoomDirectory::isActive(int roomId) {
     return directory_.count(roomId) == 1;
 }
 
-void RoomDirectory::activeRoom(int roomId, int roomService) {
+void RoomDirectory::addActiveRoom(int roomId, int roomService) {
     RwLockGuard lock(&mutex_, WRITE);
     directory_.emplace(roomId, roomService);
 }
@@ -18,4 +18,14 @@ void RoomDirectory::activeRoom(int roomId, int roomService) {
 void RoomDirectory::removeActiveRoom(int roomId) {
     RwLockGuard lock(&mutex_, WRITE);
     directory_.erase(roomId);
+}
+
+int RoomDirectory::roomServiceByRoomId(int roomId) {
+    RwLockGuard lock(&mutex_, READ);
+
+    if (!directory_.count(roomId)) {
+        return -1;
+    }
+
+    return directory_.find(roomId)->second;
 }

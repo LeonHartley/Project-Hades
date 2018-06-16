@@ -1,4 +1,4 @@
-#include <common/comms.h>
+#include <common/comms/comms.h>
 #include <common/log/log.h>
 #include <zconf.h>
 #include <hiredis/adapters/libuv.h>
@@ -26,10 +26,6 @@ void sendAvailability(uv_timer_t *data) {
     auto comms = static_cast<Communication *>(data->data);
     redisAsyncCommand(comms->client(), nullptr, nullptr, "PUBLISH %s %s", availableServicesTopic.c_str(),
                       comms->serviceName().c_str());
-
-    hades::Communication::send("peer-1", 1337, "Leon", [](hades::Buffer *buffer) {
-        buffer->write<std::string>("Leon's msg");
-    });
 }
 
 void Communication::threadCtx(void *ctx) {
