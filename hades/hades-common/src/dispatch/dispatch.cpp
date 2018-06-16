@@ -2,14 +2,14 @@
 
 using namespace hades;
 
+RwMutex DispatchGroups::mutex_;
+std::map<int, std::unique_ptr<Dispatch>> DispatchGroups::dispatchGroups_;
+
 struct DispatchAsync {
     void *ctx;
     DispatchAsyncCallback cb;
 
 };
-
-//DispatchGroups::Game = std::make_shared<Dispatch>(4);
-//DispatchGroups::Util = std::make_shared<Dispatch>(4);
 
 static void asyncCallback(uv_async_t *handle) {
     if (handle->data != nullptr) {
@@ -56,3 +56,15 @@ void DispatchLoop::async(DispatchAsyncCallback cb, void *ctx) {
     uv_async_init(loop_, handle, &asyncCallback);
     uv_async_send(handle);
 }
+
+template<typename Ctx>
+std::unique_ptr<DispatchTimer>
+Dispatch::timer(void (*callback)(Ctx *), unsigned long initialDelay, unsigned long timeout, Ctx *data) {
+    auto *loop = nextLoop();
+    auto timer = std::make_unique<DispatchTimer>(reinterpret_cast<DispatchAsyncCallback>(callback),
+                                                 loop->loop(),
+                                                 static_cast<void *>(data), initialDelay, timeout);
+
+    return std::move(timer);
+};
+

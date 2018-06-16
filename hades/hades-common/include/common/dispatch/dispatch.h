@@ -104,14 +104,8 @@ namespace hades {
 
         template<typename Ctx>
         std::unique_ptr<DispatchTimer> timer(void(*callback)(Ctx *), unsigned long initialDelay,
-                                             unsigned long timeout, Ctx *data) {
-            auto *loop = nextLoop();
-            auto timer = std::make_unique<DispatchTimer>(reinterpret_cast<DispatchAsyncCallback>(callback),
-                                                         loop->loop(),
-                                                         static_cast<void *>(data), initialDelay, timeout);
+                                             unsigned long timeout, Ctx *data);
 
-            return std::move(timer);
-        };
     private:
         DispatchLoop *nextLoop() {
             int index = index_++;
