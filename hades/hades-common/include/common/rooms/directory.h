@@ -5,6 +5,7 @@
 
 namespace hades {
     class RoomDirectory {
+    public:
         static bool isActive(int roomId);
 
         static int roomServiceByRoomId(int roomId);

@@ -1,0 +1,6 @@
+{
+  "service": {
+    "name": "room-1",
+    "type": "ROOM"
+  }
+}

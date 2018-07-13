@@ -2,4 +2,14 @@
 // Created by Leon on 16/06/2018.
 //
 
-#include "comms/serversubscriber.h"
+#include "server/comms/serversubscriber.h"
+
+using namespace hades;
+
+void ServerSubscriber::onPlayerActive(std::string id, std::unique_ptr<hades::Buffer> msg) {
+
+}
+
+void ServerSubscriber::onPlayerInactive(std::string id, std::unique_ptr<Buffer> msg) {
+
+}

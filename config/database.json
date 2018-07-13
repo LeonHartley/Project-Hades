@@ -1,0 +1,9 @@
+{
+  "mysql": {
+    "host": "localhost",
+    "username": "root",
+    "password": "",
+    "database": "cometsrv",
+    "pool_size": 4
+  }
+}

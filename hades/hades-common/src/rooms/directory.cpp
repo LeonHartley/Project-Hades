@@ -1,9 +1,9 @@
 #include "common/rooms/directory.h"
 
-#include <map>
-#include <common/util/lock.h>
-
 using namespace hades;
+
+hades::RwMutex RoomDirectory::mutex_;
+std::map<int, int> RoomDirectory::directory_;
 
 bool RoomDirectory::isActive(int roomId) {
     RwLockGuard lock(&mutex_, READ);

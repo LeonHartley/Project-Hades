@@ -10,38 +10,18 @@
 
 #include <storage/storagectx.h>
 #include <storage/mysql/mysqlplayers.h>
-#include <storage/mysql/connectionpool.h>
-
-#include <hiredis/hiredis.h>
-#include <hiredis/adapters/libuv.h>
 
 #include <common/comms/comms.h>
+#include <server/comms/serversubscriber.h>
 
 INITIALIZE_EASYLOGGINGPP
 
 auto const logger = hades::LoggerProvider::get("Boot");
 
 namespace hades {
-//    class TestSubscriber : public CommunicationSubscriber {
-//        void onMessage(Communication *ctx, short type, std::string id, std::uniqu
-// e_ptr<Buffer> msg) override {
-//            if(type == 1337) {
-//                std::string payload = msg->read<std::string>();
-//
-//                logger->info("Received subscribed msg [%v] with data %v from %v", type, payload, id);
-//            }
-//
-//            free(msg->base());
-//        }
-//    };
-
     void initialiseDispatch() {
-        DispatchGroups::addGroup(RoomDispatch, std::make_unique<Dispatch>(3));
-        DispatchGroups::addGroup(GameDispatch, std::make_unique<Dispatch>(3));
-
-        DispatchGroups::group(RoomDispatch)->async<void>([](void *arg) {
-
-        }, nullptr);
+        DispatchGroups::addGroup(RoomDispatch, std::make_unique<Dispatch>(2));
+        DispatchGroups::addGroup(GameDispatch, std::make_unique<Dispatch>(2));
     }
 
     void initialiseStorage() {
@@ -69,18 +49,22 @@ namespace hades {
 }
 
 int main(int argc, char *argv[]) {
-//    hades::Communication::start("peer-1", hades::RedisConfig{
-//            .host = "localhost",
-//            .port = 6379
-//    }, std::make_unique<hades::TestSubscriber>(hades::TestSubscriber()));
+    if (argc != 3) {
+        std::cout << "Missing configuration profile file path!" << std::endl;
+        return 1;
+    }
+
+    std::string databaseConfigPath = argv[1];
+    std::string configProfilePath = argv[2];
+
+    hades::Communication::start("peer-1", hades::RedisConfig{
+            .host = "localhost",
+            .port = 6379
+    }, std::make_unique<hades::ServerSubscriber>());
 
     hades::initialiseDispatch();
     hades::initialiseStorage();
     hades::initialiseNet();
 
-
-//    hades::Communication::dispose();
-
-//    delete hades::DispatchGroups::Game;
-//    delete hades::DispatchGroups::Util;
+    hades::Communication::dispose();
 }
