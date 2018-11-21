@@ -62,9 +62,9 @@ void checkAvailableServices(uv_timer_t *data) {
          service != comms->services()->end(); ++service) {
         long difference = currentTime - service->second;
 
-        if (difference <= SERVICE_TIMEOUT) {
-            // no update in 500ms (with extra 100ms window)
+        if (SERVICE_TIMEOUT < difference) {
             logger->info("service %v timed out (diff: %v)", service->first, difference);
+            comms->services()->erase(service->first);
         }
     }
 }
