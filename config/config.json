@@ -1,0 +1,6 @@
+{
+  "comms": {
+    "host": "localhost",
+    "port": 6379
+  }
+}

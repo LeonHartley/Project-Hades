@@ -7,9 +7,9 @@
 using namespace hades;
 
 void ServerSubscriber::onPlayerActive(std::string id, std::unique_ptr<hades::Buffer> msg) {
-
+    //
 }
 
 void ServerSubscriber::onPlayerInactive(std::string id, std::unique_ptr<Buffer> msg) {
-
+    // Update directory, notify online players
 }

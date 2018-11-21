@@ -10,6 +10,8 @@
 #include <common/net/buffer.h>
 #include <hiredis/async.h>
 #include <iostream>
+#include <map>
+#include <common/util/lock.h>
 
 namespace hades {
     class Communication;
@@ -34,30 +36,30 @@ namespace hades {
                       std::unique_ptr<CommunicationSubscriber> subscriber)
                 : serviceName_(std::move(serviceName)),
                   subscriber_(std::move(subscriber)),
-                  thread_(static_cast<uv_thread_t *>(
-                                  malloc(sizeof(uv_thread_t)))),
-
-                  loop_(static_cast<uv_loop_t *>(malloc(
-                          sizeof(uv_loop_t)))),
                   ctx_(redisAsyncConnect(redisConfig.host.c_str(), redisConfig.port)),
                   client_(redisAsyncConnect(redisConfig.host.c_str(), redisConfig.port)) {}
 
         ~Communication() {
-            uv_thread_join(this->thread_);
-
-            free(this->thread_);
-            free(this->loop_);
+            uv_thread_join(&this->thread_);
         }
 
         static void dispose();
 
-        static void
-        start(std::string serviceName, RedisConfig redisConfig, std::unique_ptr<CommunicationSubscriber> subscriber);
+        static void start(std::string serviceName, RedisConfig redisConfig,
+                          std::unique_ptr<CommunicationSubscriber> subscriber);
 
         static void send(std::string serviceName, short type, std::string id, void (*writer)(Buffer *buf));
 
+        std::map<std::string, long> *services() {
+            return &services_;
+        };
+
+        RwMutex *servicesLock() {
+            return &servicesLock_;
+        }
+
         uv_loop_t *loop() {
-            return loop_;
+            return &loop_;
         }
 
         redisAsyncContext *listenClient() {
@@ -75,12 +77,21 @@ namespace hades {
     private:
         std::string serviceName_;
         std::unique_ptr<CommunicationSubscriber> subscriber_;
+        std::map<std::string, long> services_;
 
         redisAsyncContext *client_;
         redisAsyncContext *ctx_;
-        uv_loop_t *loop_;
-        uv_thread_t *thread_;
+
+        uv_loop_t loop_;
+        uv_thread_t thread_;
+        RwMutex servicesLock_;
 
         static void threadCtx(void *ctx);
+
+        static void createSubscription(redisAsyncContext *redis, void *r, void *ctx);
+
+        void onServiceAvailable(std::string serviceName);
+
+        void onMessage(redisReply *payload);
     };
 }

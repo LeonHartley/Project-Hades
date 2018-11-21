@@ -8,9 +8,43 @@ using namespace hades;
 auto const logger = LoggerProvider::get("GameServer");
 const char policyFile[208] = "<?xml version=\"1.0\"?>\r\n<!DOCTYPE cross-domain-policy \ SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">\r\n<cross-domain-policy>\r\n<allow-access-from domain=\"*\" to-ports=\"*\" />\r\n</cross-domain-policy>\0";
 
-void GameServer::allocateUvBuffer(uv_stream_t *stream, size_t recommendedSize, uv_buf_t *out) {
+void allocateUvBuffer(uv_stream_t *stream, size_t recommendedSize, uv_buf_t *out) {
     out->base = static_cast<char *>(malloc(recommendedSize));
     out->len = recommendedSize;
+}
+
+void sendCrossDomainPolicy(uv_stream_t *stream) {
+    uv_write_t *req = static_cast<uv_write_t *>(malloc(sizeof(uv_write_t)));
+    uv_buf_t buffer = uv_buf_init(static_cast<char *>(malloc(sizeof(policyFile))), sizeof(policyFile));
+
+    buffer.base = (char *) policyFile;
+
+    req->handle = stream;
+    req->data = buffer.base;
+
+    uv_write(req, stream, &buffer, 1, [](uv_write_t *req, int status) {
+        uv_close(reinterpret_cast<uv_handle_t *>(req->handle), &GameServer::onStreamClosed);
+    });
+}
+
+void handleMessage(uv_stream_t *stream, uv_buf_t *buffer, GameServer *server) {
+    Session *session = nullptr;
+
+    if (stream->data == nullptr) {
+        std::unique_ptr<Session> newSession = server->sessionFactory()->createSession(stream);
+        const long id = newSession->id();
+
+        session = newSession.get();
+
+        stream->data = static_cast<void *>(session);
+        Session::registerSession(id, std::move(newSession));
+    }
+
+    auto buf = std::make_unique<Buffer>(buffer->len, buffer->base);
+
+    server->streamHandler()->onReceiveData(
+            session == nullptr ? Session::fromStream(stream) : session,
+            std::move(buf));
 }
 
 void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buffer) {
@@ -22,35 +56,9 @@ void GameServer::onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buff
     }
 
     if (buffer->base[0] == '<') {
-        uv_write_t *req = static_cast<uv_write_t *>(malloc(sizeof(uv_write_t)));
-        uv_buf_t buffer = uv_buf_init(static_cast<char *>(malloc(sizeof(policyFile))), sizeof(policyFile));
-
-        buffer.base = (char *) policyFile;
-
-        req->handle = stream;
-        req->data = buffer.base;
-
-        uv_write(req, stream, &buffer, 1, [](uv_write_t *req, int status) {
-            uv_close(reinterpret_cast<uv_handle_t *>(req->handle), &GameServer::onStreamClosed);
-        });
+        sendCrossDomainPolicy(stream);
     } else {
-        Session *session = nullptr;
-
-        if (stream->data == nullptr) {
-            std::unique_ptr<Session> newSession = server->sessionFactory_->createSession(stream);
-            const long id = newSession->id();
-
-            session = newSession.get();
-
-            stream->data = static_cast<void *>(session);
-            Session::registerSession(id, std::move(newSession));
-        }
-
-        auto buf = std::make_unique<Buffer>(buffer->len, buffer->base);
-
-        server->streamHandler_->onReceiveData(
-                session == nullptr ? Session::fromStream(stream) : session,
-                std::move(buf));
+        handleMessage(stream, buffer, server);
     }
 }
 
@@ -87,7 +95,7 @@ void GameServer::createStream(uv_stream_t *serverStream) {
         logger->trace("Starting read for stream");
 
         uv_read_start(stream,
-                      reinterpret_cast<uv_alloc_cb>(&GameServer::allocateUvBuffer),
+                      reinterpret_cast<uv_alloc_cb>(&allocateUvBuffer),
                       reinterpret_cast<uv_read_cb>(&GameServer::onDataReceived));
 
     } else {
@@ -96,6 +104,12 @@ void GameServer::createStream(uv_stream_t *serverStream) {
 }
 
 void GameServer::start() {
+    const auto acceptProxy = [](uv_stream_t *handle, int status) {
+        auto gameServer = static_cast<GameServer *>(handle->data);
+
+        gameServer->createStream(handle);
+    };
+
     uv_tcp_t server;
     sockaddr_in bind_addr;
 
@@ -105,12 +119,6 @@ void GameServer::start() {
     uv_tcp_init(this->loop_, &server);
     uv_ip4_addr(this->host_.c_str(), this->port_, &bind_addr);
     uv_tcp_bind(&server, (const struct sockaddr *) &bind_addr, 0);
-
-    auto acceptProxy = [](uv_stream_t *handle, int status) {
-        auto gameServer = static_cast<GameServer *>(handle->data);
-
-        gameServer->createStream(handle);
-    };
 
     uv_listen((uv_stream_t *) &server, 128, acceptProxy);
 

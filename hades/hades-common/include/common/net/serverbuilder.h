@@ -37,8 +37,8 @@ namespace hades {
         }
 
         std::unique_ptr<GameServer> create() {
-            return std::make_unique<GameServer>(host_, port_, std::make_unique<SessionFactory>(sessionFactory_),
-                                                std::make_unique<StreamHandler>(streamHandler_),
+            return std::make_unique<GameServer>(host_, port_, std::make_unique<SessionFactory>(std::move(sessionFactory_)),
+                                                std::make_unique<StreamHandler>(std::move(streamHandler_)),
                                                 loop_);
         }
 

@@ -99,6 +99,28 @@ void Session::removeSession(long id) {
     sessions_.erase(id);
 }
 
+struct asyncMessageContext {
+    Session *session;
+    std::unique_ptr<Buffer> buffer;
+};
+
+void asyncMessageHandler(uv_work_t *workItem) {
+    auto ctx = static_cast<asyncMessageContext *>(workItem->data);
+    MessageDispatch::dispatch(ctx->session, std::move(ctx->buffer));
+
+    delete ctx;
+}
+
 void SessionContext::handleMessage(Session *session, std::unique_ptr<Buffer> buffer) {
-    MessageDispatch::dispatch(session, std::move(buffer));
+    auto ctx = new asyncMessageContext();
+    auto workItem = static_cast<uv_work_t *>(malloc(sizeof(uv_work_t)));
+
+    ctx->session = session;
+    ctx->buffer = std::move(buffer);
+
+    workItem->data = ctx;
+
+    uv_queue_work(session->loop(), workItem, &asyncMessageHandler, static_cast<uv_after_work_cb>([](uv_work_t*, int) {
+        // executed on event loop, execute any flushes?
+    }));
 }

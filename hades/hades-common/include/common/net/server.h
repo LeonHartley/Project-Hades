@@ -23,6 +23,14 @@ namespace hades {
 
         void start();
 
+        SessionFactory *sessionFactory() {
+            return sessionFactory_.get();
+        }
+
+        StreamHandler *streamHandler() {
+            return streamHandler_.get();
+        }
+
         static void onStreamClosed(uv_handle_t *stream);
     private:
         void createStream(uv_stream_t *server);
@@ -34,8 +42,6 @@ namespace hades {
 
         const std::unique_ptr<SessionFactory> sessionFactory_;
         const std::unique_ptr<StreamHandler> streamHandler_;
-
-        static void allocateUvBuffer(uv_stream_t *stream, size_t recommendedSize, uv_buf_t *out);
 
         static void onDataReceived(uv_stream_t *stream, size_t read, uv_buf_t *buffer);
     };

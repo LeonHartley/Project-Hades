@@ -36,7 +36,6 @@ namespace hades {
 
         ~Session() {
             this->context_ = nullptr;
-            std::cout << "SESSION DISPOSED" << std::endl;
         }
 
         void send(const Message &message);
@@ -67,14 +66,16 @@ namespace hades {
             return id_;
         }
 
+        uv_loop_t *loop() {
+            return handle_->loop;
+        }
+
     private:
         void flushBuffer(std::unique_ptr<Buffer> buffer);
 
         uv_stream_t *handle_;
 
         std::unique_ptr<SessionContext> context_;
-//        std::mutex msgQueueLockm_;
-//        std::unique_ptr<Buffer> buffer_;
         long id_;
     };
 }
